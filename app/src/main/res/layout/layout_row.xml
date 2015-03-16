@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout style="@style/RowLayou"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginBottom="5dp"
-    android:onClick="delRow">
-    <TextView
-        style="@style/TextStyle"
+    style="@style/RowLayou"
+    android:layout_marginBottom="5dp">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="word"
-        />
-    <TextView
+        android:onClick="delRow">
+
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="word" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:clickable="true"
-        android:onClick="vhideClick"
-        android:text="Мир" />
+        android:onClick="vhideClick">
+        <TextView
+            style="@style/TextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Мир" />
+    </LinearLayout>
 </LinearLayout>

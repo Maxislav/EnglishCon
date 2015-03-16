@@ -100,18 +100,31 @@ public class MainActivity extends ActionBarActivity {
         }
     }
     public void vhideClick(View view) {
-       // Log.d("vhideClick", View.getInstance(view)+"");
-        if(view instanceof TextView){
-            TextView animTextView = ((TextView)view);
-            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
-            new HideText(animTextView , anim).start();
+        Log.d("vhideClick", view.toString() );
+
+        ViewGroup parent = (ViewGroup)view;
+        TextView tv =(TextView) parent.getChildAt(0);
+
+        Log.d("INVISIBLE",     tv.isShown()+"");
+
+        if(tv instanceof TextView){
+
+            if(tv.isShown()){
+                TextView animTextView = ((TextView)tv);
+                Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
+                new HideText(animTextView , anim).start();
+            }else {
+                tv.setVisibility(View.VISIBLE);
+            }
+
         }else{
             return;
         }
     }
 
     public void delRow(View view){
-        new ActionElements(this, view).delRow();
+
+        new ActionElements(this, (LinearLayout)view.getParent()).delRow();
     }
 
     public class MyTextView {
@@ -140,7 +153,8 @@ public class MainActivity extends ActionBarActivity {
         }
         public void start(){
          //   boolean v = (View.INVISIBLE).equals(animTextView.getVisibility());
-            int v = View.INVISIBLE;
+            //int v = animTextView.INVISIBLE;
+            //Log.d
             //Log.d("getVisibility",     ().(View.INVISIBLE)+"" );
             //Log.d("getVisibility",     v +"");
             animTextView.startAnimation(anim);
@@ -194,16 +208,22 @@ public class MainActivity extends ActionBarActivity {
         mainLayout.addView(rowLinearLayout);
         ViewGroup viewGroup = (ViewGroup) rowLinearLayout;
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View child;
+            View child, child2;
+            ViewGroup viewGroup2;
+
+
             switch (i){
                 case 0:
                     child = viewGroup.getChildAt(i);
-                    ((TextView)child).setText(en);
-
+                    viewGroup2 = (ViewGroup) child;
+                    child2 = viewGroup2.getChildAt(0);
+                    ((TextView)child2).setText(en);
                     break;
                 case 1:
                     child = viewGroup.getChildAt(i);
-                    ((TextView)child).setText(ru);
+                    viewGroup2 = (ViewGroup) child;
+                    child2 = viewGroup2.getChildAt(0);
+                    ((TextView)child2).setText(ru);
                     break;
             }
         }
