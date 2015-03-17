@@ -33,6 +33,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String VALUE_EN = "value_en";
     public static final String VALUE_RU = "value_ru";
     public static final String SHOW_RU = "show_ru";
+    public static final String IN_MIND = "in_mind";
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE if not exists "
             + TABLE_NAME + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -69,26 +70,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<Map> selectData() {
+    public ArrayList<Map> selectData(int inMind) {
+        String jquery;
+        switch (inMind){
+            case 0:
+                jquery = "SELECT * FROM "+this.TABLE_NAME+" WHERE in_mind=0";
+                break;
+            default:
+                jquery = "SELECT * FROM "+this.TABLE_NAME;
+        }
+
+
         SQLiteDatabase sdb = this.getWritableDatabase();
         Map<String, String> map;
-        // Array map;
         ArrayList<Map> arrayList = new ArrayList<Map>();
-
-
         Cursor cursor;
         try {
-            cursor = sdb.query(this.TABLE_NAME, new String[]{
-                            this.UID, this.VALUE_EN, this.VALUE_RU, this.SHOW_RU},
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            );
+            cursor = sdb.rawQuery(jquery,null);
         } catch (Exception e) {
             Log.d("Err", "table not exist");
-
             return null;
         }
 
@@ -97,14 +97,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             String valueEn = cursor.getString(cursor.getColumnIndex(this.VALUE_EN));
             String valueRu = cursor.getString(cursor.getColumnIndex(this.VALUE_RU));
             String show_ru = cursor.getString(cursor.getColumnIndex(this.SHOW_RU));
+            String in_mind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
 
-           // Log.d("LOG_TAG", "ROW " + id + " EN: " + valueEn + " RU: " + valueRu+"    " +show_ru);
+            Log.d("LOG_TAG", "ROW " + id + " EN: " + valueEn + " RU: " + valueRu+" SHOW_RU: " +show_ru+ " IN_MIND: "+in_mind);
 
             map = new HashMap<String, String>();
             map.put("ID", id + "");
             map.put("EN", valueEn);
             map.put("RU", valueRu);
             map.put("SHOW_RU", show_ru);
+            map.put("IN_MIND", in_mind);
             arrayList.add(map);
         }
         sdb.close();
@@ -117,24 +119,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sdb.close();
     }
 
-    //создание колонки в таблице
-    public void createColumn(){
-        String jquery = "ALTER TABLE "+this.TABLE_NAME+" ADD show_ru INTEGER";
-        SQLiteDatabase sdb = this.getWritableDatabase();
-        sdb.execSQL(jquery);
-        sdb.close();
-
-    }
+    //вилим или не видим перевод
     public void setShow(String id){
         String jquery;
         String shown = "0";
         SQLiteDatabase sdb = this.getWritableDatabase();
-
         jquery = "SELECT show_ru FROM "+this.TABLE_NAME+" WHERE _id="+id;
         Cursor cursor = sdb.rawQuery(jquery,null);
-
         while (cursor.moveToNext()) {
-            //Log.d("SELECT show_ru", cursor.getString(cursor.getColumnIndex(this.SHOW_RU)));
             shown = cursor.getString(cursor.getColumnIndex(this.SHOW_RU));
         }
         if(shown.equals("1")){
@@ -151,7 +143,42 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sdb.close();
 
     }
+    public void setInMind(String id){
+        String jquery;
+        String inMind = "0";
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        jquery = "SELECT "+this.IN_MIND+" FROM "+this.TABLE_NAME+" WHERE _id="+id;
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        while (cursor.moveToNext()) {
+            inMind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
+        }
+        if(inMind.equals("0")){
+            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 1 WHERE _id="+id;
+            Log.d("set inMind", "1" );
+        }else{
+            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 0 WHERE _id="+id;
+            Log.d("set inMind", "0" );
+        }
+        sdb.execSQL(jquery);
+        sdb.close();
+
+    }
 
 
+
+
+    //создание колонки в таблице
+    public void createColumn(){
+        String jquery = "ALTER TABLE "+this.TABLE_NAME+" ADD COLUMN in_mind INTEGER";
+
+        SQLiteDatabase sdb = this.getWritableDatabase();
+       // sdb.execSQL(jquery);
+       // jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind=0 ";
+        sdb.execSQL(jquery);
+
+
+        sdb.close();
+
+    }
 
 }

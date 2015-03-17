@@ -23,7 +23,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shadow"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
                     <EditText
                         android:id="@+id/editTextEn"
                         android:layout_width="match_parent"
@@ -38,7 +40,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shadow"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
                     <EditText
                         android:id="@+id/editTextRu"
                         android:layout_width="match_parent"
@@ -75,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-5dp"
                 android:layout_weight="1"
-
+android:onClick="createColumn"
                 android:text="SET" />
         </LinearLayout>
         <LinearLayout
@@ -88,6 +92,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:id="@+id/mainLayout"
                     android:orientation="vertical">
                 </LinearLayout>
             </ScrollView>
