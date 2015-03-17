@@ -106,15 +106,19 @@ public class MainActivity extends ActionBarActivity {
         TextView tv =(TextView) parent.getChildAt(0);
 
         Log.d("INVISIBLE",     tv.isShown()+"");
-
+        Animation anim;
+        TextView animTextView;
         if(tv instanceof TextView){
-
             if(tv.isShown()){
-                TextView animTextView = ((TextView)tv);
-                Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
-                new HideText(animTextView , anim).start();
+                animTextView = ((TextView)tv);
+                anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
+                new MyAnimation(animTextView , anim).hide();
             }else {
-                tv.setVisibility(View.VISIBLE);
+
+              //  tv.setVisibility(View.VISIBLE);
+                animTextView = ((TextView)tv);
+                anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_show);
+                new MyAnimation(animTextView , anim).show();
             }
 
         }else{
@@ -142,24 +146,18 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private class HideText {
+    private class MyAnimation {
         LinearLayout parentLinLayaou;
         TextView animTextView;
         Animation anim;
-        HideText(TextView animTextView, Animation anim){
+        MyAnimation(TextView animTextView, Animation anim){
             this.parentLinLayaou = (LinearLayout)animTextView.getParent();
             this.animTextView = animTextView;
             this.anim = anim;
         }
-        public void start(){
-         //   boolean v = (View.INVISIBLE).equals(animTextView.getVisibility());
-            //int v = animTextView.INVISIBLE;
-            //Log.d
-            //Log.d("getVisibility",     ().(View.INVISIBLE)+"" );
-            //Log.d("getVisibility",     v +"");
+        public void hide(){
             animTextView.startAnimation(anim);
             anim.setAnimationListener(new Animation.AnimationListener() {
-
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -170,8 +168,26 @@ public class MainActivity extends ActionBarActivity {
                 public void onAnimationEnd(Animation animation) {
                     Log.d("End", "Anim end");
                     animTextView.setVisibility(View.INVISIBLE);
-                    //parentLinLayaou.removeView(animTextView);
-                    //ll.removeView(tv);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+        public void show(){
+            animTextView.startAnimation(anim);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    animTextView.setVisibility(View.VISIBLE);
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    Log.d("End", "Anim end");
                 }
 
                 @Override
@@ -183,6 +199,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+
     public void selectDataFromDataBase(){
         mainLayout.removeAllViews();
         if(dataBaseHelper.selectData()!=null){
@@ -191,6 +208,7 @@ public class MainActivity extends ActionBarActivity {
             for (Map map : arrayList) {
                 String valueEn =  map.get("EN").toString();
                 String valueRu =  map.get("RU").toString();
+
                 Log.d("LOG_TAG", valueEn);
                 createItems(valueEn, valueRu);
             }
@@ -221,11 +239,21 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case 1:
                     child = viewGroup.getChildAt(i);
+                    clickListener(child);
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
                     ((TextView)child2).setText(ru);
                     break;
             }
         }
+    }
+
+    public void clickListener(View view){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vhideClick(v);
+            }
+        });
     }
 }
