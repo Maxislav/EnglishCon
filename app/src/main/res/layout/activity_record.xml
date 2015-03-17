@@ -9,58 +9,88 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-
-        >
-
-
+        android:orientation="vertical">
         <RelativeLayout
-            android:background="@drawable/gradient"
-            android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:layout_weight="1"
-                    android:id="@+id/editTextEn"
+                android:layout_height="wrap_content"
+                android:padding="0dp">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:inputType="textMultiLine" />
-                <EditText
                     android:layout_weight="1"
-                    android:id="@+id/editTextRu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:singleLine="false"/>
+                    android:background="@drawable/shadow"
+                    android:padding="10dp">
+                    <EditText
+                        android:id="@+id/editTextEn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:inputType="textMultiLine"
+                        android:singleLine="false" />
                 </LinearLayout>
 
-            </RelativeLayout>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/shadow"
+                    android:padding="10dp">
+                    <EditText
+                        android:id="@+id/editTextRu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:inputType="textMultiLine"
+                        android:singleLine="false" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/gradien_mirror"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
+                android:layout_weight="1"
                 android:onClick="clickBtnAdd"
                 android:text="Add word" />
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="clickBtnDrop"
-                android:text="Drop Data base" />
+                android:layout_marginTop="-5dp"
+                android:layout_weight="1"
+                android:text="Edit" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
+                android:layout_weight="1"
 
+                android:text="SET" />
         </LinearLayout>
-
-
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradien_mirror">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

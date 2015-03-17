@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
     public TextView tv;
 
     LinearLayout ll;
-    LinearLayout  mainLayout;
+    LinearLayout mainLayout;
     TableLayout tableLayout;
 
     DataBaseHelper dataBaseHelper;
@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Learn");
-        mainLayout = (LinearLayout)findViewById(R.id.mainLayout);
+        mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
         themes = getTheme();
 
@@ -72,19 +72,20 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if( id == R.id.action_learn){
+        if (id == R.id.action_learn) {
 
             return true;
         }
 
-        if( id == R.id.action_record){
-            Intent questionIntent = new Intent( this, RecortActivity.class);
+        if (id == R.id.action_record) {
+            Intent questionIntent = new Intent(this, RecortActivity.class);
             startActivityForResult(questionIntent, CHOOSE_THIEF);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
@@ -94,46 +95,46 @@ public class MainActivity extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 String thiefname = data.getStringExtra(RecortActivity.THIEF);
                 //  infoTextView.setText(thiefname);
-            }else {
+            } else {
                 // infoTextView.setText(""); // стираем текст
             }
         }
     }
+
     public void vhideClick(View view) {
-        Log.d("vhideClick", view.toString() );
+        Log.d("vhideClick", view.toString());
 
-        ViewGroup parent = (ViewGroup)view;
-        TextView tv =(TextView) parent.getChildAt(0);
+        ViewGroup parent = (ViewGroup) view;
+        TextView tv = (TextView) parent.getChildAt(0);
 
-        Log.d("INVISIBLE",     tv.isShown()+"");
+        Log.d("INVISIBLE", tv.isShown() + "");
         Animation anim;
         TextView animTextView;
-        if(tv instanceof TextView){
-            if(tv.isShown()){
-                animTextView = ((TextView)tv);
+        if (tv instanceof TextView) {
+            if (tv.isShown()) {
+                animTextView = ((TextView) tv);
                 anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
-                new MyAnimation(animTextView , anim).hide();
-            }else {
+                new MyAnimation(animTextView, anim).hide();
+            } else {
 
-              //  tv.setVisibility(View.VISIBLE);
-                animTextView = ((TextView)tv);
+                //  tv.setVisibility(View.VISIBLE);
+                animTextView = ((TextView) tv);
                 anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_show);
-                new MyAnimation(animTextView , anim).show();
+                new MyAnimation(animTextView, anim).show();
             }
 
-        }else{
+        } else {
             return;
         }
     }
 
-    public void delRow(View view){
-
-        new ActionElements(this, (LinearLayout)view.getParent()).delRow();
+    public void delRow(View view) {
+        new ActionElements(this, (LinearLayout) view.getParent()).delRow();
     }
 
     public class MyTextView {
         public TextView myView;
-        public  boolean visible;
+        public boolean visible;
 
         public MyTextView(TextView myView) {
             this.myView = myView;
@@ -150,12 +151,14 @@ public class MainActivity extends ActionBarActivity {
         LinearLayout parentLinLayaou;
         TextView animTextView;
         Animation anim;
-        MyAnimation(TextView animTextView, Animation anim){
-            this.parentLinLayaou = (LinearLayout)animTextView.getParent();
+
+        MyAnimation(TextView animTextView, Animation anim) {
+            this.parentLinLayaou = (LinearLayout) animTextView.getParent();
             this.animTextView = animTextView;
             this.anim = anim;
         }
-        public void hide(){
+
+        public void hide() {
             animTextView.startAnimation(anim);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -176,7 +179,8 @@ public class MainActivity extends ActionBarActivity {
                 }
             });
         }
-        public void show(){
+
+        public void show() {
             animTextView.startAnimation(anim);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -199,60 +203,77 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-
-    public void selectDataFromDataBase(){
+    public void selectDataFromDataBase() {
         mainLayout.removeAllViews();
-        if(dataBaseHelper.selectData()!=null){
+        if (dataBaseHelper.selectData() != null) {
             ArrayList<Map> arrayList = dataBaseHelper.selectData();
 
             for (Map map : arrayList) {
-                String valueEn =  map.get("EN").toString();
-                String valueRu =  map.get("RU").toString();
-
-                Log.d("LOG_TAG", valueEn);
-                createItems(valueEn, valueRu);
+                String valueEn = map.get("EN").toString();
+                String valueRu = map.get("RU").toString();
+                String _id = map.get("ID").toString();
+                String show_ru = map.get("SHOW_RU").toString();
+               Log.d("SHOW_RU", show_ru);
+                createItems(valueEn, valueRu, _id, show_ru);
             }
-        }else{
+        } else {
             return;
         }
     }
 
-    private void createItems(String en, String ru){
+    private void createItems(String en, String ru, String _id , String show_ru) {
 
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_row, mainLayout, false);
         LayoutParams lp = view.getLayoutParams();
-        LinearLayout rowLinearLayout = (LinearLayout)view;
+        LinearLayout rowLinearLayout = (LinearLayout) view;
         mainLayout.addView(rowLinearLayout);
         ViewGroup viewGroup = (ViewGroup) rowLinearLayout;
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child, child2;
             ViewGroup viewGroup2;
 
-
-            switch (i){
+            switch (i) {
                 case 0:
                     child = viewGroup.getChildAt(i);
+                    clickListener(child, _id, i);
+
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
-                    ((TextView)child2).setText(en);
+                    ((TextView) child2).setText(en);
                     break;
                 case 1:
                     child = viewGroup.getChildAt(i);
-                    clickListener(child);
+
+                    clickListener(child, _id, i);
+
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
-                    ((TextView)child2).setText(ru);
+                    if(show_ru.equals("0")){
+                        ((TextView) child2).setVisibility(View.INVISIBLE);
+                    }
+
+                    ((TextView) child2).setText(ru);
                     break;
             }
         }
     }
 
-    public void clickListener(View view){
+    public void clickListener(View view, String _id, int n) {
+        final String ID = _id;
+        final int N = n;
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vhideClick(v);
+                switch (N) {
+                    case 0:
+                        delRow(v);
+                        break;
+                    default:
+                        dataBaseHelper.setShow(ID);
+                        vhideClick(v);
+
+                }
             }
         });
     }

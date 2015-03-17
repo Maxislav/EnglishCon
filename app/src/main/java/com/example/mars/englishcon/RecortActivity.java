@@ -6,13 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class RecortActivity extends ActionBarActivity {
@@ -28,25 +26,21 @@ public class RecortActivity extends ActionBarActivity {
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-
         editTextEn = (EditText)findViewById(R.id.editTextEn);
         editTextRu = (EditText)findViewById(R.id.editTextRu);
-
+        dataBaseHelper = new DataBaseHelper(this);
     }
 
 
     @Override
     protected void onStart() {
 
-        dataBaseHelper = new DataBaseHelper(this); //подключение к базе
-
+        //подключение к базе
         SQLiteDatabase sdb = dataBaseHelper.getWritableDatabase();
         dataBaseHelper.onCreate(sdb);
-
         sdb.close();
         dataBaseHelper.close();
         super.onStart();
-     //   selectDataFromDataBase();
 
     }
 
@@ -89,8 +83,11 @@ public class RecortActivity extends ActionBarActivity {
         ContentValues cv = new ContentValues();
         cv.put(dataBaseHelper.VALUE_EN, editTextEn.getText().toString());
         cv.put(dataBaseHelper.VALUE_RU, editTextRu.getText().toString());
-
+        cv.put(dataBaseHelper.SHOW_RU, 1);
         long nDb = dataBaseHelper.insertMyRow(cv);
+
+
+
         Toast toast = Toast.makeText(getApplicationContext(),
                 "Добавлена заись №: " + nDb,
                 Toast.LENGTH_SHORT);
@@ -135,4 +132,12 @@ public class RecortActivity extends ActionBarActivity {
 
 
     }
+    //создание колонки
+    public void createColumn(View view){
+        dataBaseHelper.createColumn();
+    }
+
+   /* public void setShow(View view) {
+        dataBaseHelper.setShow();
+    }*/
 }
