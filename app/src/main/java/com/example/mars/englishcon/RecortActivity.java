@@ -27,6 +27,8 @@ public class RecortActivity extends ActionBarActivity {
     EditText editTextEn;
     EditText editTextRu;
     LinearLayout mainLayout;
+    private final static String LOG = "RecortActivity";
+    private static String editId;
 
     public final static String THIEF = "com.example.mars.englishcon.THIEF";
     DataBaseHelper dataBaseHelper;
@@ -39,6 +41,13 @@ public class RecortActivity extends ActionBarActivity {
         editTextRu = (EditText)findViewById(R.id.editTextRu);
         dataBaseHelper = new DataBaseHelper(this);
         mainLayout = (LinearLayout)findViewById(R.id.mainLayout);
+        setTitle("Edit");
+        getData();
+        editId = null;
+    }
+
+    private void updateView(){
+        mainLayout.removeAllViews();
         getData();
     }
 
@@ -73,28 +82,22 @@ public class RecortActivity extends ActionBarActivity {
             switch (i) {
                 case 0:
                     child = viewGroup.getChildAt(i);
-                  //  clickListener(child, _id, i);
-
                     viewGroup2 = (ViewGroup) child;
-                    child2 = viewGroup2.getChildAt(0);
+                    child2 = viewGroup2.getChildAt(0); //TextView
                     ((TextView) child2).setText(en);
+                    clickListener(child2, _id, 0);
 
-                    childInMind = viewGroup2.getChildAt(1);
+                    childInMind = viewGroup2.getChildAt(1); //Img
                     if(in_mind.equals("0")){
                         childInMind.setVisibility(View.INVISIBLE);
                     }else{
-                        clickListener(childInMind, _id, i);
+                        clickListener(childInMind, _id, 1);
                     }
                     break;
                 case 1:
                     child = viewGroup.getChildAt(i);
-
-                   // clickListener(child, _id, i);
-
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
-
-
                     ((TextView) child2).setText(ru);
                     break;
             }
@@ -184,11 +187,40 @@ public class RecortActivity extends ActionBarActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setVisibility(View.INVISIBLE);
-                dataBaseHelper.setInMind(ID);
+                switch (N){
+                    case 0:
+                        Map<String,String> map = dataBaseHelper.selectById(ID);
+                        Log.d(LOG, map.get("value_en")+": "+map.get("value_ru"));
+                        editTextEn.setText(map.get("value_en"));
+                        editTextRu.setText(map.get("value_ru"));
+                        editId = ID;
+                        break;
+                    case 1:
+                        v.setVisibility(View.INVISIBLE);
+                        dataBaseHelper.setInMind(ID);
+                        break;
+                    default:
+                }
             }
         });
     }
+
+
+    public void clickBtnEdit(View view){
+        boolean update = false;
+        if(editId !=null){
+            update =  dataBaseHelper.updateValueRow(editTextEn.getText().toString(), editTextRu.getText().toString(), editId);
+        }
+
+        if(update){
+            updateView();
+            editTextEn.setText("");
+            editTextRu.setText("");
+            editId = null;
+        }
+
+    }
+
 
     public void clickBtnDrop(View view) {
         //dataBaseHelper.dropTable();
@@ -213,15 +245,6 @@ public class RecortActivity extends ActionBarActivity {
                         }
                     }
                 });
-
-        /*Toast toast = Toast.makeText(getApplicationContext(),
-                "Данные удалены",
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-*/
-
-
     }
     //создание колонки
     public void createColumn(View view){

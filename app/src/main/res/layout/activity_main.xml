@@ -32,7 +32,7 @@
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
                     android:minHeight="0dp"
-                    android:text="Hide" />
+                    android:text="Reverse" />
             </TableRow>
         </TableLayout>
 

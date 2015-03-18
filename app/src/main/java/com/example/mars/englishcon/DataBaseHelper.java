@@ -37,7 +37,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE if not exists "
             + TABLE_NAME + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + VALUE_EN + " VARCHAR(255), " + VALUE_RU + " VARCHAR(255)" + ");";
+            + VALUE_EN + " VARCHAR(255), " + VALUE_RU + " VARCHAR(255), "
+            + SHOW_RU + " INTEGER, " + IN_MIND + " INTEGER" + ");";
 
 
     public DataBaseHelper(Context context) {
@@ -164,6 +165,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //Ds,jhrf одной строки по ID
+    public Map<String,String> selectById(String id){
+        String valueEn, valueRu;
+        String jquery = "SELECT "+ VALUE_EN +", "+VALUE_RU+" FROM "+ TABLE_NAME+" WHERE _id="+id;
+        Map<String,String> map = new HashMap<String, String>();
+        SQLiteDatabase sdb = getWritableDatabase();
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        while (cursor.moveToNext()){
+            //valueEn
+            map.put(VALUE_EN, cursor.getString(cursor.getColumnIndex(this.VALUE_EN)));
+            map.put(VALUE_RU, cursor.getString(cursor.getColumnIndex(this.VALUE_RU)));
+
+        }
+        sdb.close();
+        return map;
+
+    }
+
+    public boolean updateValueRow(String valueEn , String valueRu, String id){
+        SQLiteDatabase sdb = getWritableDatabase();
+        String jquery = "UPDATE " + this.TABLE_NAME+" SET value_en = '"+valueEn+"', value_ru='"+valueRu+"' WHERE _id="+id;
+        try {
+            sdb.execSQL(jquery);
+        }catch (Exception e){
+            e.printStackTrace();
+            sdb.close();
+            return false;
+        }
+        sdb.close();
+        return true;
+    }
 
 
 
