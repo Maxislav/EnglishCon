@@ -187,6 +187,7 @@ public class RecortActivity extends ActionBarActivity {
             toast.show();
             editTextEn.setText("");
             editTextRu.setText("");
+            updateView();
         }
     }
     public void clickListener(View view, String _id, int n) {
