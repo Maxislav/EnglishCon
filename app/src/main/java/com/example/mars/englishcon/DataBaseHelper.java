@@ -165,7 +165,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    //Ds,jhrf одной строки по ID
+    //Выбор одной строки по ID
     public Map<String,String> selectById(String id){
         String valueEn, valueRu;
         String jquery = "SELECT "+ VALUE_EN +", "+VALUE_RU+" FROM "+ TABLE_NAME+" WHERE _id="+id;
@@ -183,9 +183,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //редактирование
     public boolean updateValueRow(String valueEn , String valueRu, String id){
         SQLiteDatabase sdb = getWritableDatabase();
         String jquery = "UPDATE " + this.TABLE_NAME+" SET value_en = '"+valueEn+"', value_ru='"+valueRu+"' WHERE _id="+id;
+        try {
+            sdb.execSQL(jquery);
+        }catch (Exception e){
+            e.printStackTrace();
+            sdb.close();
+            return false;
+        }
+        sdb.close();
+        return true;
+    }
+
+    public boolean delRowById(String id){
+        SQLiteDatabase sdb = getWritableDatabase();
+        String jquery = "DELETE FROM "+TABLE_NAME+" WHERE _id="+id;
         try {
             sdb.execSQL(jquery);
         }catch (Exception e){

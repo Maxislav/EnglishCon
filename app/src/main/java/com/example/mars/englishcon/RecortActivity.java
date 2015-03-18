@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -101,10 +102,11 @@ public class RecortActivity extends ActionBarActivity {
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
                     ((TextView) child2).setText(ru);
-
-
-
-                    clickListenerDel(  ((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(1), ((ViewGroup)((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0)).getChildAt(0));
+                    clickListenerDel(
+                            ((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0),    //button minus
+                            ((ViewGroup)((ViewGroup)((ViewGroup) rowLinearLayout).getChildAt(0)).getChildAt(2)).getChildAt(0), //dutton del
+                            rowLinearLayout,
+                            _id);
                     break;
             }
         }
@@ -210,18 +212,19 @@ public class RecortActivity extends ActionBarActivity {
             }
         });
     }
-    public void clickListenerDel(View _minus, View _del){
+    public void clickListenerDel(View _minus, View _del, View _rowLinearLayout, String _id){
         final View del = _del;
         final View minus = _minus;
+        final String id = _id;
+        final View rowLinearLayout =  _rowLinearLayout;
        // final  Animation anim;
         _minus.setOnClickListener(new View.OnClickListener() {
             Animation anim;
-
             @Override
             public void onClick(View v) {
                 if (del.isShown()) {
                     minus.setBackgroundResource(R.drawable.minus_0);
-                    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
+                    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_left_hide);
                     del.startAnimation(anim);
                     anim.setAnimationListener(new Animation.AnimationListener() {
                         @Override
@@ -241,9 +244,48 @@ public class RecortActivity extends ActionBarActivity {
                 } else {
                     minus.setBackgroundResource(R.drawable.minus_90);
                     del.setVisibility(View.VISIBLE);
-                    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_show);
+                    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_left_show);
                     del.startAnimation(anim);
                 }
+            }
+        });
+
+        _del.setOnClickListener(new View.OnClickListener(){
+            Animation anim;
+            @Override
+            public void onClick(View v) {
+                anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
+                anim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        new Handler().post(new Runnable() {
+                            public void run() {
+
+                                if(dataBaseHelper.delRowById(id)){
+                                    mainLayout.removeView(rowLinearLayout);
+                                }else{
+                                    Toast toast = Toast.makeText(getApplicationContext(),
+                                            "Ошибка удаления",
+                                            Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                }
+                            }
+                        });
+                       // mainLayout.removeCh();
+                      //  del.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                rowLinearLayout.startAnimation(anim);
             }
         });
     }
@@ -260,11 +302,10 @@ public class RecortActivity extends ActionBarActivity {
             updateView();
             editTextEn.setText("");
             editTextRu.setText("");
+            updateView();
             editId = null;
         }
-
     }
-
 
     public void clickBtnDrop(View view) {
         //dataBaseHelper.dropTable();
