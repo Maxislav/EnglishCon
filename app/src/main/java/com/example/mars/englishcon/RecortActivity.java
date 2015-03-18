@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -76,7 +78,7 @@ public class RecortActivity extends ActionBarActivity {
         mainLayout.addView(rowLinearLayout);
         ViewGroup viewGroup = (ViewGroup) rowLinearLayout;
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View child, child2, childInMind;
+            View child, child2, child3, childInMind;
             ViewGroup viewGroup2;
 
             switch (i) {
@@ -99,6 +101,10 @@ public class RecortActivity extends ActionBarActivity {
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
                     ((TextView) child2).setText(ru);
+
+
+
+                    clickListenerDel(  ((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(1), ((ViewGroup)((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0)).getChildAt(0));
                     break;
             }
         }
@@ -204,6 +210,44 @@ public class RecortActivity extends ActionBarActivity {
             }
         });
     }
+    public void clickListenerDel(View _minus, View _del){
+        final View del = _del;
+        final View minus = _minus;
+       // final  Animation anim;
+        _minus.setOnClickListener(new View.OnClickListener() {
+            Animation anim;
+
+            @Override
+            public void onClick(View v) {
+                if (del.isShown()) {
+                    minus.setBackgroundResource(R.drawable.minus_0);
+                    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
+                    del.startAnimation(anim);
+                    anim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            del.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                } else {
+                    minus.setBackgroundResource(R.drawable.minus_90);
+                    del.setVisibility(View.VISIBLE);
+                    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_show);
+                    del.startAnimation(anim);
+                }
+            }
+        });
+    }
+
 
 
     public void clickBtnEdit(View view){
