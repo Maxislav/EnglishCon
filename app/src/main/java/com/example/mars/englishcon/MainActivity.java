@@ -1,5 +1,8 @@
 package com.example.mars.englishcon;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,6 +29,7 @@ import java.util.Map;
 public class MainActivity extends ActionBarActivity {
 
     public TextView tv;
+    private static boolean reverse;
 
     LinearLayout ll;
     LinearLayout mainLayout;
@@ -39,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        reverse = false;
         setTitle("Learn");
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
@@ -48,21 +53,19 @@ public class MainActivity extends ActionBarActivity {
         SQLiteDatabase sdb = dataBaseHelper.getWritableDatabase();
         sdb.close();
         dataBaseHelper.close();
+        selectDataFromDataBase();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        selectDataFromDataBase();
-
+        updateView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-
         return true;
     }
 
@@ -202,9 +205,13 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private void updateView(){
+        mainLayout.removeAllViews();
+        selectDataFromDataBase();
+    }
 
     public void selectDataFromDataBase() {
-        mainLayout.removeAllViews();
+       // mainLayout.removeAllViews();
         if (dataBaseHelper.selectData(0) != null) {
             ArrayList<Map> arrayList = dataBaseHelper.selectData(0);
             for (Map map : arrayList) {
@@ -236,27 +243,81 @@ public class MainActivity extends ActionBarActivity {
                 case 0:
                     child = viewGroup.getChildAt(i);
                     clickListener(child, _id, i);
-
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
-                    ((TextView) child2).setText(en);
+                    if(reverse){
+                        ((TextView) child2).setText(ru);
+                    }else{
+                        ((TextView) child2).setText(en);
+                    }
+
                     break;
                 case 1:
                     child = viewGroup.getChildAt(i);
-
                     clickListener(child, _id, i);
-
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0);
                     if(show_ru.equals("0")){
                         ((TextView) child2).setVisibility(View.INVISIBLE);
                     }
-
-                    ((TextView) child2).setText(ru);
+                    if(reverse){
+                        ((TextView) child2).setText(en);
+                    }else{
+                        ((TextView) child2).setText(ru);
+                    }
                     break;
             }
         }
     }
+    public void clickBtnReverse(View view){
+        rott1();
+    }
+
+    public  void rott1(){
+        Animator anim = AnimatorInflater.loadAnimator(this, R.animator.flip_left_in);
+        rotateAnim(anim, false);
+    }
+    public  void rott2(){
+        Animator anim = AnimatorInflater.loadAnimator(this, R.animator.flip_left_out);
+        rotateAnim(anim, true);
+    }
+
+    private void rotateAnim(Animator anim, final boolean fill){
+
+        final Context c = this.getApplicationContext();
+        anim.setTarget(mainLayout);
+
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                if(fill){
+                    updateView();
+                }
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+               if(!fill){
+                   if(reverse){
+                       reverse = false;
+                   }else{
+                       reverse = true;
+                   }
+                   rott2();
+               }
+            }
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        anim.start();
+    }
+
 
     public void clickListener(View view, String _id, int n) {
         final String ID = _id;
