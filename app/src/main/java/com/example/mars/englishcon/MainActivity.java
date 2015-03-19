@@ -64,20 +64,21 @@ public class MainActivity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
         updateView();
+        overridePendingTransition( R.anim.translate_left_show, R.anim.translate );
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.action_bar_layout, null);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setIcon(R.drawable.en_con);
+      //  actionBar.setIcon(R.drawable.en_con);
         actionBar.setCustomView(v);
         return true;
     }

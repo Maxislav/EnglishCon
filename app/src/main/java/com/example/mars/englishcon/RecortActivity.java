@@ -1,10 +1,12 @@
 package com.example.mars.englishcon;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,13 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class RecortActivity extends ActionBarActivity {
 
-
+    protected Toolbar mActionBar;
     EditText editTextEn;
     EditText editTextRu;
     LinearLayout mainLayout;
@@ -124,6 +127,7 @@ public class RecortActivity extends ActionBarActivity {
         sdb.close();
         dataBaseHelper.close();
         super.onStart();
+        overridePendingTransition( R.anim.translate_left_show, R.anim.translate );
     }
 
 
@@ -131,6 +135,17 @@ public class RecortActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.action_bar_layout, null);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setHomeButtonEnabled(true);
+        //  actionBar.setIcon(R.drawable.en_con);
+        actionBar.setCustomView(v);
         return true;
     }
 
@@ -139,8 +154,11 @@ public class RecortActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+
         int id = item.getItemId();
 
+        Log.d("MyLog", id+"  : " + android.R.id.home);
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_record) {
             return true;
@@ -154,6 +172,11 @@ public class RecortActivity extends ActionBarActivity {
             return true;
         }
 
+        if(id ==  android.R.id.home){
+            Log.d("MyLog", "Home");
+            finish();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

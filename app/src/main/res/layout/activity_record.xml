@@ -71,7 +71,8 @@
                 android:layout_marginTop="-5dp"
                 android:layout_weight="1"
                 android:onClick="clickBtnAdd"
-                android:text="Add word" />
+                android:text="Add word"
+                android:layout_marginRight="-5dp" />
 
             <Button
                 android:layout_width="match_parent"
@@ -79,7 +80,8 @@
                 android:layout_marginTop="-5dp"
                 android:layout_weight="1"
                 android:onClick="clickBtnEdit"
-                android:text="Apply edit" />
+                android:text="Apply edit"
+                android:layout_marginLeft="-5dp" />
 
            <!-- <Button
                 android:layout_width="match_parent"
