@@ -27,7 +27,7 @@ import android.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class RecortActivity extends ActionBarActivity {
+public class RecordActivity extends ActionBarActivity {
 
     protected Toolbar mActionBar;
     EditText editTextEn;
@@ -127,7 +127,7 @@ public class RecortActivity extends ActionBarActivity {
         sdb.close();
         dataBaseHelper.close();
         super.onStart();
-        overridePendingTransition( R.anim.translate_left_show, R.anim.translate );
+        overridePendingTransition( R.anim.translate_show, R.anim.translate_left_hide );
     }
 
 

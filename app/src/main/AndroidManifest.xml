@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RecortActivity"
+        <activity android:name=".RecordActivity"
             android:label="Learn">
         </activity>
     </application>

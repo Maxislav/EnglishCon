@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         if (id == R.id.action_record) {
-            Intent questionIntent = new Intent(this, RecortActivity.class);
+            Intent questionIntent = new Intent(this, RecordActivity.class);
             startActivityForResult(questionIntent, CHOOSE_THIEF);
             return true;
         }
@@ -110,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (requestCode == CHOOSE_THIEF) {
             if (resultCode == RESULT_OK) {
-                String thiefname = data.getStringExtra(RecortActivity.THIEF);
+                String thiefname = data.getStringExtra(RecordActivity.THIEF);
                 //  infoTextView.setText(thiefname);
             } else {
                 // infoTextView.setText(""); // стираем текст
