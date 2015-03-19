@@ -20,6 +20,9 @@
         <activity android:name=".RecordActivity"
             android:label="Learn">
         </activity>
+        <activity android:name=".GameActivity"
+            android:label="Game">
+        </activity>
     </application>
 
 </manifest>

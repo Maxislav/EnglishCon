@@ -22,14 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class RecordActivity extends ActionBarActivity {
 
-    protected Toolbar mActionBar;
+
     EditText editTextEn;
     EditText editTextRu;
     LinearLayout mainLayout;
@@ -129,12 +128,10 @@ public class RecordActivity extends ActionBarActivity {
         super.onStart();
         overridePendingTransition( R.anim.translate_show, R.anim.translate_left_hide );
     }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+       // getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -163,7 +160,6 @@ public class RecordActivity extends ActionBarActivity {
         if (id == R.id.action_record) {
             return true;
         }
-
         if (id == R.id.action_learn) {
             Intent answerInent = new Intent();
             answerInent.putExtra(THIEF, "Сраный пёсик");
@@ -172,12 +168,16 @@ public class RecordActivity extends ActionBarActivity {
             return true;
         }
 
+        if(id==R.id.action_game){
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+        }
+
         if(id ==  android.R.id.home){
             Log.d("MyLog", "Home");
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

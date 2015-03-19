@@ -77,6 +77,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             case 0:
                 jquery = "SELECT * FROM "+this.TABLE_NAME+" WHERE in_mind=0";
                 break;
+            case 1:
+                jquery = "SELECT * FROM "+this.TABLE_NAME;
+                break;
+            case 2:
+                jquery = "SELECT * FROM "+this.TABLE_NAME+" WHERE in_mind=1";
+                break;
             default:
                 jquery = "SELECT * FROM "+this.TABLE_NAME;
         }
@@ -226,6 +232,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         sdb.close();
 
+    }
+    public Map<String, String> getRundom(){
+
+        Map<String,String> map = new HashMap<String, String>();
+        ArrayList<Map> arrayList = selectData(2);
+        Log.d("MyLog","arrayList size:"+ arrayList.size()+"");
+
+        int n = random_int(0,arrayList.size());
+
+        map = arrayList.get(n);
+
+
+
+        return map;
+    }
+    private static int random_int(int Min, int Max)
+    {
+        return (int) (Math.random()*(Max-Min))+Min;
     }
 
 }
