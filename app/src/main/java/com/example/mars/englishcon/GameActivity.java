@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -276,7 +278,28 @@ public class GameActivity extends ActionBarActivity {
                 if (arrayList.size() == arrayValues.length - 1) {
                     checkNext();
                 }
-                v.setVisibility(View.INVISIBLE);
+                final View _v = v;
+               // animTextView = ((TextView) tv);
+                Animation    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_out);
+                _v.startAnimation(anim);
+                anim.setAnimationListener(new Animation.AnimationListener() {
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        _v.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                //v.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -337,10 +360,7 @@ public class GameActivity extends ActionBarActivity {
     }
 
     private void checkNext() {
-
         if (fillTex.equals(value)) {
-
-
             final int n = dataBaseHelper.setGame(currentId, true);
             final Handler h = new MyHundler();
             Thread thread;
