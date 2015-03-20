@@ -42,14 +42,32 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradien_mirror"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainLayout"
-            android:orientation="vertical"
-            android:minHeight="100dp">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mainLayout"
+                android:orientation="vertical"
+                android:minHeight="100dp" >
 
-        </LinearLayout>
+            </LinearLayout>
+           <!-- <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
+                android:background="#32000000"
+                android:gravity="center">
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+
+                    android:layout_gravity="center" />
+             </FrameLayout>-->
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,19 +76,18 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
-                android:text="Regen"/>
-            <Button
-                android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Check"/>
+                android:layout_marginRight="-5dp"
+                android:onClick="clickRegen"
+                android:text="Next"/>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
+                android:layout_weight="1"
+                android:layout_marginLeft="-5dp"
                 android:onClick="clickBack"
-                android:text="back"/>
+                android:text="Back"/>
         </LinearLayout>
         </LinearLayout>
 

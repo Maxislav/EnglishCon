@@ -31,6 +31,7 @@ public class MainActivity extends ActionBarActivity {
 
     public TextView tv;
     private static boolean reverse;
+    Intent questionIntent;
 
     LinearLayout ll;
     LinearLayout mainLayout;
@@ -103,8 +104,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
         if(id == R.id.action_game){
-            Intent questionIntent = new Intent(this, GameActivity.class);
+            if(this.questionIntent == null){
+                questionIntent = new Intent(this, GameActivity.class);
+            }
             startActivityForResult(questionIntent, CHOOSE_THIEF);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -246,9 +250,7 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
     }
-
     private void createItems(String en, String ru, String _id , String show_ru) {
-
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_row, mainLayout, false);
         LayoutParams lp = view.getLayoutParams();

@@ -1,7 +1,10 @@
 package com.example.mars.englishcon;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
@@ -20,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+//import java.util.logging.Handler;
 
 /**
  * Created by mars on 3/19/15.
@@ -42,7 +47,8 @@ public class GameActivity extends ActionBarActivity {
     private String[] arrayValues;
     private LinearLayout rowLinearLayout;
     private DataBaseHelper dataBaseHelper;
-    ArrayList <Map> arrayList;
+    ArrayList<Map> arrayList;
+
 
     public void setRowLinearLayout(LinearLayout rowLinearLayout) {
         this.rowLinearLayout = rowLinearLayout;
@@ -59,9 +65,9 @@ public class GameActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        fillTextVeiw = (TextView)findViewById(R.id.fillTextVeiw);
-        findTextView = (TextView)findViewById(R.id.findTextView);
-        fillTex ="";
+        fillTextVeiw = (TextView) findViewById(R.id.fillTextVeiw);
+        findTextView = (TextView) findViewById(R.id.findTextView);
+        fillTex = "";
         dataBaseHelper = new DataBaseHelper(this);
         displayMetrics = this.getResources().getDisplayMetrics();
         density = displayMetrics.density;
@@ -99,6 +105,7 @@ public class GameActivity extends ActionBarActivity {
         menu.findItem(R.id.action_game).setVisible(false);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -107,34 +114,48 @@ public class GameActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_learn) {
             Log.d("MyLog", "Home");
-            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             return true;
         }
 
         if (id == R.id.action_record) {
-            Log.d("MyLog", "Home");
-            finish();
+            Intent intent = new Intent(this, RecordActivity.class);
+            startActivity(intent);
             return true;
         }
 
-        if(id == R.id.action_game){
+        if (id == R.id.action_game) {
+
             return true;
            /* Intent questionIntent = new Intent(this, GameActivity.class);
             startActivityForResult(questionIntent, CHOOSE_THIEF);*/
         }
 
-        if(id ==  android.R.id.home){
+        if (id == android.R.id.home) {
             Log.d("MyLog", "Home");
             finish();
             return true;
         }
+
+        Log.d("MyLog", "Home");
+        finish();
+
         return super.onOptionsItemSelected(item);
     }
 
 
-
     public void onInit() {
-        arrayList = new ArrayList<Map>();
+        if (value == null) {
+            mixValue = getRandom();
+            arrayValues = mixValue.split("");
+            elementsLength = arrayValues.length;
+            arrayList = new ArrayList<Map>();
+            generate();
+            //createRow();
+        }
+
+        /*
 
         Map<String, String> map = dataBaseHelper.getRundom();
         value = map.get("EN");
@@ -152,11 +173,34 @@ public class GameActivity extends ActionBarActivity {
                 Log.d(LOG, "char: " + a.toString());
                 mix += a.toString();
             }
-        }
-        mixValue = mix;
-        arrayValues = mixValue.split("");
-        elementsLength = arrayValues.length;
+        }*/
+
+    }
+
+    private void generate() {
         createRow();
+    }
+
+
+    private String getRandom() {
+        Map<String, String> map = dataBaseHelper.getRundom();
+        value = map.get("EN");
+        findTextView.setText(map.get("RU"));
+        nElements = 0;
+        fillTex = "";
+        arrayValues = value.split("");
+        ArrayList<String> imgList = new ArrayList<String>(Arrays.asList(arrayValues));
+        long seed = System.nanoTime();
+        Collections.shuffle(imgList, new Random(seed));
+        String mix = "";
+        for (String item : imgList) {
+            String a = item;
+            if (!item.isEmpty()) {
+                Log.d(LOG, "char: " + a.toString());
+                mix += a.toString();
+            }
+        }
+        return mix;
     }
 
     private void createRow() {
@@ -174,13 +218,12 @@ public class GameActivity extends ActionBarActivity {
         rowLinearLayout.addView(latterView);
 
 
-
         TextView t = (TextView) ((ViewGroup) latterView).getChildAt(0);
         //Log.d(LOG, "before: "+t.getWidth()+"");
         nElements++;
         if (nElements < arrayValues.length) {
             t.setText(arrayValues[nElements] + "");
-            clickListener(latterView, "0" , arrayValues[nElements] );
+            clickListener(latterView, "0", arrayValues[nElements]);
         }
         getWidth(latterView, 1);
     }
@@ -212,6 +255,7 @@ public class GameActivity extends ActionBarActivity {
             }
         });
     }
+
     public void clickListener(View view, String _id, String _letter) {
         final String ID = _id;
         final String letter = _letter;
@@ -219,19 +263,78 @@ public class GameActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Map<String, View> map = new HashMap<String, View>();
-                fillTex+=letter;
+                fillTex += letter;
                 fillTextVeiw.setText(fillTex);
-                map.put(inflater.toString(), v);
+                map.put(letter, v);
                 arrayList.add(map);
+                // Log.d(LOG, "size:: "+arrayList.size() + ":" + (arrayValues.length-1));
+                if (arrayList.size() == arrayValues.length - 1) {
+                    checkNext();
+                }
                 v.setVisibility(View.INVISIBLE);
             }
         });
     }
 
-    public void clickBack(View v){
+
+    public void clickBack(View v) {
+        if (arrayList == null || arrayList.size() < 1) {
+            return;
+        }
         Map<String, View> map;
-        map = arrayList.remove(arrayList.size()-1);
+        map = arrayList.remove(arrayList.size() - 1);
+        String k = "";
+        for (String key : map.keySet()) {
+            k = key.toString();
+            Log.d(LOG, "Key: " + key.toString() + "   ");
+        }
+        map.get(k).setVisibility(View.VISIBLE);
+        String[] fillTex = this.fillTex.split("");
 
+        String newFillText = "";
+        for (int i = 1; i < fillTex.length - 1; i++) {
+            newFillText += fillTex[i];
+        }
+        this.fillTex = newFillText;
+        fillTextVeiw.setText(this.fillTex);
+    }
 
+    public void clickRegen(View v) {
+        regenParam();
+    }
+
+    public void regenParam() {
+        value = null;
+        mainLayout.removeAllViews();
+        fillTextVeiw.setText("...");
+        onInit();
+    }
+
+    private class MyHundler  extends Handler{
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            Log.d(LOG, msg.obj.toString());
+            regenParam();
+        }
+    }
+
+    private void checkNext() {
+        if (fillTex.equals(value)) {
+            final Handler h = new MyHundler();
+            Thread thread;
+            thread = new Thread() {
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                        Message msg = Message.obtain(h);
+                        msg.obj = "to Regen start";
+                        h.sendMessage(msg);
+                    } catch (InterruptedException e) {
+                        Log.e(LOG, "run in thread", e);
+                    }
+                }
+            };
+            thread.start();
+        }
     }
 }
