@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +49,7 @@ public class GameActivity extends ActionBarActivity {
     private String[] arrayValues;
     private LinearLayout rowLinearLayout;
     private DataBaseHelper dataBaseHelper;
+    private String currentId;
     ArrayList<Map> arrayList;
 
 
@@ -151,6 +154,7 @@ public class GameActivity extends ActionBarActivity {
             arrayValues = mixValue.split("");
             elementsLength = arrayValues.length;
             arrayList = new ArrayList<Map>();
+
             generate();
             //createRow();
         }
@@ -185,6 +189,7 @@ public class GameActivity extends ActionBarActivity {
     private String getRandom() {
         Map<String, String> map = dataBaseHelper.getRundom();
         value = map.get("EN");
+        currentId =  map.get("ID");
         findTextView.setText(map.get("RU"));
         nElements = 0;
         fillTex = "";
@@ -196,7 +201,7 @@ public class GameActivity extends ActionBarActivity {
         for (String item : imgList) {
             String a = item;
             if (!item.isEmpty()) {
-                Log.d(LOG, "char: " + a.toString());
+                //Log.d(LOG, "char: " + a.toString());
                 mix += a.toString();
             }
         }
@@ -314,20 +319,38 @@ public class GameActivity extends ActionBarActivity {
         @Override
         public void handleMessage(android.os.Message msg) {
             Log.d(LOG, msg.obj.toString());
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    msg.obj.toString(),
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP, 0, 0);
+            toast.show();
             regenParam();
         }
     }
+    public void clickTip(View view){
+        Toast toast = Toast.makeText(getApplicationContext(),
+                value,
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
 
     private void checkNext() {
+
         if (fillTex.equals(value)) {
+
+
+            final int n = dataBaseHelper.setGame(currentId, true);
             final Handler h = new MyHundler();
             Thread thread;
             thread = new Thread() {
+
                 public void run() {
                     try {
                         Thread.sleep(500);
                         Message msg = Message.obtain(h);
-                        msg.obj = "to Regen start";
+                        msg.obj = "Correct result:" +n;
                         h.sendMessage(msg);
                     } catch (InterruptedException e) {
                         Log.e(LOG, "run in thread", e);
@@ -335,6 +358,15 @@ public class GameActivity extends ActionBarActivity {
                 }
             };
             thread.start();
+        }else{
+            if(currentId!=null){
+                dataBaseHelper.setGame(currentId, false);
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Wrong",
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 0);
+                toast.show();
+            }
         }
     }
 }

@@ -34,11 +34,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String VALUE_RU = "value_ru";
     public static final String SHOW_RU = "show_ru";
     public static final String IN_MIND = "in_mind";
+    public static final String IN_GAME = "in_game";
+
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE if not exists "
             + TABLE_NAME + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + VALUE_EN + " VARCHAR(255), " + VALUE_RU + " VARCHAR(255), "
-            + SHOW_RU + " INTEGER, " + IN_MIND + " INTEGER" + ");";
+            + SHOW_RU + " INTEGER, " + IN_MIND + " INTEGER, " + IN_GAME+ " INTEGER "+ ");";
 
 
     public DataBaseHelper(Context context) {
@@ -81,7 +83,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 jquery = "SELECT * FROM "+this.TABLE_NAME;
                 break;
             case 2:
-                jquery = "SELECT * FROM "+this.TABLE_NAME+" WHERE in_mind=1";
+                jquery = "SELECT * FROM "+this.TABLE_NAME+" WHERE in_mind=1 AND in_game<10";
                 break;
             default:
                 jquery = "SELECT * FROM "+this.TABLE_NAME;
@@ -139,6 +141,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if(shown.equals("1")){
             jquery = "UPDATE " + this.TABLE_NAME+" SET show_ru = 0 WHERE _id="+id;
             Log.d("set show_ru", "0" );
+
         }else{
             jquery = "UPDATE " + this.TABLE_NAME+" SET show_ru = 1 WHERE _id="+id;
             Log.d("set show_ru", "1" );
@@ -150,7 +153,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sdb.close();
 
     }
-    public void setInMind(String id){
+    public void setInMind(String id, boolean in_mind){
         String jquery;
         String inMind = "0";
         SQLiteDatabase sdb = this.getWritableDatabase();
@@ -159,13 +162,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             inMind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
         }
-        if(inMind.equals("0")){
+
+        if(in_mind){
             jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 1 WHERE _id="+id;
             Log.d("set inMind", "1" );
         }else{
             jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 0 WHERE _id="+id;
             Log.d("set inMind", "0" );
         }
+
+
+      /*
+        if(inMind.equals("0")){
+            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 1 WHERE _id="+id;
+            Log.d("set inMind", "1" );
+        }else{
+            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 0 WHERE _id="+id;
+            Log.d("set inMind", "0" );
+        }*/
         sdb.execSQL(jquery);
         sdb.close();
 
@@ -221,8 +235,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     //создание колонки в таблице
-    public void createColumn(){
-        String jquery = "ALTER TABLE "+this.TABLE_NAME+" ADD COLUMN in_mind INTEGER";
+    public void createColumn(String colName, String type){
+        String jquery = "ALTER TABLE "+this.TABLE_NAME+" ADD COLUMN "+colName+" "+type;
 
         SQLiteDatabase sdb = this.getWritableDatabase();
        // sdb.execSQL(jquery);
@@ -230,23 +244,66 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sdb.execSQL(jquery);
 
 
+
         sdb.close();
 
     }
     public Map<String, String> getRundom(){
-
         Map<String,String> map = new HashMap<String, String>();
         ArrayList<Map> arrayList = selectData(2);
         Log.d("MyLog","arrayList size:"+ arrayList.size()+"");
-
         int n = random_int(0,arrayList.size());
-
         map = arrayList.get(n);
-
-
-
         return map;
     }
+
+
+
+    public int setGame(String id, boolean in_game){
+        if(!in_game){
+            setInMind(id, in_game);
+        }
+        SQLiteDatabase sdb = getWritableDatabase();
+        String jquery = "SELECT "+ IN_GAME +" FROM "+ TABLE_NAME+" WHERE _id="+id;
+        String inGame="";
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        while (cursor.moveToNext()){
+            inGame = cursor.getString(cursor.getColumnIndex(IN_GAME));
+        }
+        int n;
+        if(inGame!=null){
+            n  = Integer.parseInt(inGame);
+            if(in_game){
+                n++;
+            }else if(n<1){
+                n=0;
+            }else{
+                n--;
+            }
+            Log.d("MyLog", " inGame= "+ n);
+            jquery = "UPDATE " + TABLE_NAME+" SET "+IN_GAME+"="+n+" WHERE _id="+id;
+        }else{
+            if(in_game){
+                n=1;
+            }else{
+                n=0;
+            }
+            Log.d("MyLog", " inGame= "+ null);
+            jquery = "UPDATE " + TABLE_NAME+" SET "+IN_GAME+"="+n+" WHERE _id="+id;
+        }
+        try {
+            sdb.execSQL(jquery);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("MyLog","My SQL Exception   " + e.toString());
+
+            //createColumn(IN_GAME, "INTEGER");
+           // setGame(id, in_game);
+        }
+        sdb.close();
+        return n;
+    }
+
     private static int random_int(int Min, int Max)
     {
         return (int) (Math.random()*(Max-Min))+Min;

@@ -3,53 +3,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/RowLayou"
     android:layout_marginBottom="2dp"
+    android:orientation="horizontal"
     android:padding="14dp">
-
-    <FrameLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
         android:orientation="horizontal">
-
-        <TextView
-            style="@style/TextStyle"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="word"
-            android:layout_gravity="left|center"
-            android:padding="5dp" />
+            android:layout_weight="1">
+            <TextView
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="word" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="6dp"
-            android:layout_gravity="right|center"
-            android:background="@drawable/checkbox" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/background"
+                    android:gravity="center"
+                    android:text="Del"
+                    android:textColor="#FFF"
+                    android:textSize="12dp"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="1dp"
-                android:textColor="#FFF"
-                android:background="@drawable/background"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="6dp"
                 android:gravity="center"
-                android:visibility="invisible"
-                android:text="Del"
-                android:textSize="12dp" />
+                android:background="@drawable/checkbox" />
         </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
+
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
-
-
 
 
         <TextView
@@ -58,15 +68,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp"
-            android:text="Мир"
+            android:paddingBottom="5dp"
             android:paddingLeft="0dp"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
+            android:text="Мир" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="right|center">
+            android:layout_gravity="right|center"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:layout_width="20dp"
@@ -75,7 +86,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
                 android:background="@drawable/minus_0" />
-         </LinearLayout>
+        </LinearLayout>
 
 
     </FrameLayout>

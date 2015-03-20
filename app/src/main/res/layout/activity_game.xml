@@ -80,6 +80,15 @@
                 android:layout_marginRight="-5dp"
                 android:onClick="clickRegen"
                 android:text="Next"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="clickTip"
+                android:layout_marginRight="-5dp"
+                android:layout_marginLeft="-5dp"
+                android:text="Tip"
+                />
 
             <Button
                 android:layout_width="wrap_content"

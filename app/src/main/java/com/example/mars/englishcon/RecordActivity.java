@@ -89,6 +89,7 @@ public class RecordActivity extends ActionBarActivity {
                     child = viewGroup.getChildAt(i);
                     viewGroup2 = (ViewGroup) child;
                     child2 = viewGroup2.getChildAt(0); //TextView
+                    child2 = ((ViewGroup)child2).getChildAt(0);
                     ((TextView) child2).setText(en);
                     clickListener(child2, _id, 0);
 
@@ -106,7 +107,13 @@ public class RecordActivity extends ActionBarActivity {
                     ((TextView) child2).setText(ru);
                     clickListenerDel(
                             ((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0),    //button minus
-                            ((ViewGroup)((ViewGroup)((ViewGroup) rowLinearLayout).getChildAt(0)).getChildAt(2)).getChildAt(0), //dutton del
+
+                            //((ViewGroup)((ViewGroup)((ViewGroup) rowLinearLayout).getChildAt(0)).getChildAt(2)).getChildAt(0), //dutton del
+                            ((ViewGroup) ((ViewGroup)((ViewGroup) ((ViewGroup)rowLinearLayout)
+                                    .getChildAt(0))
+                                    .getChildAt(0))
+                                    .getChildAt(1))
+                                    .getChildAt(0), //dutton del
                             rowLinearLayout,
                             _id);
                     break;
@@ -143,6 +150,7 @@ public class RecordActivity extends ActionBarActivity {
         actionBar.setHomeButtonEnabled(true);
         //  actionBar.setIcon(R.drawable.en_con);
         actionBar.setCustomView(v);
+        menu.findItem(R.id.action_record).setVisible(false);
         return true;
     }
 
@@ -202,6 +210,7 @@ public class RecordActivity extends ActionBarActivity {
             cv.put(dataBaseHelper.VALUE_RU, valueRu);
             cv.put(dataBaseHelper.SHOW_RU, 1);
             cv.put(dataBaseHelper.IN_MIND, 0);
+            cv.put(dataBaseHelper.IN_GAME, 0);
             long nDb = dataBaseHelper.insertMyRow(cv);
             Toast toast = Toast.makeText(getApplicationContext(),
                     "Добавлена заись №: " + nDb,
@@ -229,7 +238,7 @@ public class RecordActivity extends ActionBarActivity {
                         break;
                     case 1:
                         v.setVisibility(View.INVISIBLE);
-                        dataBaseHelper.setInMind(ID);
+                        dataBaseHelper.setInMind(ID, false);
                         break;
                     default:
                 }
@@ -355,6 +364,9 @@ public class RecordActivity extends ActionBarActivity {
                     }
                 });
     }
+
+
+
     //создание колонки
     public void createColumn(View view){
         //dataBaseHelper.createColumn();

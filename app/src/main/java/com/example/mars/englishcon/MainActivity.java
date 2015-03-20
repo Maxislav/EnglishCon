@@ -107,7 +107,8 @@ public class MainActivity extends ActionBarActivity {
             if(this.questionIntent == null){
                 questionIntent = new Intent(this, GameActivity.class);
             }
-            startActivityForResult(questionIntent, CHOOSE_THIEF);
+            startActivity(questionIntent);
+          //  startActivityForResult(questionIntent, CHOOSE_THIEF);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -349,7 +350,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 switch (N) {
                     case 0:
-                        dataBaseHelper.setInMind(ID);
+                        dataBaseHelper.setInMind(ID, true);
                         delRow(v);
                         break;
                     default:
