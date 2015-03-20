@@ -26,12 +26,9 @@
                     android:text="Учим" />
 
                 <Button
+                    style="@style/btn"
                     android:layout_width="match_parent"
-                    android:layout_marginLeft="-5dp"
-                    android:layout_marginRight="-5dp"
                     android:layout_weight="1"
-                    android:textColor="#FFFFFF"
-                    android:minHeight="0dp"
                     android:onClick="clickBtnReverse"
                     android:text="Reverse" />
             </TableRow>
