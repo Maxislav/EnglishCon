@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -36,12 +37,12 @@ public class GameActivity extends ActionBarActivity {
     private TextView fillTextVeiw;
     private String fillTex;
     private TextView findTextView;
-    DataBaseHelper dataBaseHelper;
-
-
     private String value;
+    private String mixValue;
     private String[] arrayValues;
     private LinearLayout rowLinearLayout;
+    private DataBaseHelper dataBaseHelper;
+    ArrayList <Map> arrayList;
 
     public void setRowLinearLayout(LinearLayout rowLinearLayout) {
         this.rowLinearLayout = rowLinearLayout;
@@ -62,7 +63,6 @@ public class GameActivity extends ActionBarActivity {
         findTextView = (TextView)findViewById(R.id.findTextView);
         fillTex ="";
         dataBaseHelper = new DataBaseHelper(this);
-
         displayMetrics = this.getResources().getDisplayMetrics();
         density = displayMetrics.density;
         dpHeight = displayMetrics.heightPixels / density;
@@ -96,6 +96,7 @@ public class GameActivity extends ActionBarActivity {
         actionBar.setHomeButtonEnabled(true);
         //  actionBar.setIcon(R.drawable.en_con);
         actionBar.setCustomView(v);
+        menu.findItem(R.id.action_game).setVisible(false);
         return true;
     }
     @Override
@@ -131,18 +132,15 @@ public class GameActivity extends ActionBarActivity {
     }
 
 
+
     public void onInit() {
+        arrayList = new ArrayList<Map>();
 
         Map<String, String> map = dataBaseHelper.getRundom();
-
-
-       // value = "inflater";
         value = map.get("EN");
         findTextView.setText(map.get("RU"));
         nElements = 0;
         fillTex ="";
-
-        //findTextView.setText(value);
         arrayValues = value.split("");
         ArrayList<String> imgList = new ArrayList<String>(Arrays.asList(arrayValues));
         long seed = System.nanoTime();
@@ -155,8 +153,8 @@ public class GameActivity extends ActionBarActivity {
                 mix += a.toString();
             }
         }
-        value = mix;
-        arrayValues = value.split("");
+        mixValue = mix;
+        arrayValues = mixValue.split("");
         elementsLength = arrayValues.length;
         createRow();
     }
@@ -220,10 +218,20 @@ public class GameActivity extends ActionBarActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, View> map = new HashMap<String, View>();
                 fillTex+=letter;
                 fillTextVeiw.setText(fillTex);
+                map.put(inflater.toString(), v);
+                arrayList.add(map);
                 v.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    public void clickBack(View v){
+        Map<String, View> map;
+        map = arrayList.remove(arrayList.size()-1);
+
+
     }
 }

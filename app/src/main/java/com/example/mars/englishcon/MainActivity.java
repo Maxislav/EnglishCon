@@ -82,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
         actionBar.setDisplayShowTitleEnabled(false);
       //  actionBar.setIcon(R.drawable.en_con);
         actionBar.setCustomView(v);
+        menu.findItem(R.id.action_learn).setVisible(false);
         return true;
     }
 
