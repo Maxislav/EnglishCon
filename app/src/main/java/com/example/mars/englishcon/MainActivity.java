@@ -34,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
     Intent questionIntent;
 
     LinearLayout ll;
+
     LinearLayout mainLayout;
     TableLayout tableLayout;
 
