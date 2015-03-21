@@ -94,15 +94,15 @@ public class RecordActivity extends ActionBarActivity {
                     ((TextView) child2).setText(en);
 
                     clickListener(child2, _id, 0, true); //TextView
-
-                    ((TextView)((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0)).setText(in_game);
+                    TextView inMintTv =   ((TextView)((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0));
+                    inMintTv.setText(in_game);
 
                     childInMind = viewGroup2.getChildAt(2); //LinearLayout в котором img
                     if(in_mind.equals("0")){
-                        clickListenerInMind(childInMind, _id, false);
+                        clickListenerInMind(childInMind, _id, inMintTv, false);
                         //childInMind.setVisibility(View.INVISIBLE);
                     }else{
-                        clickListenerInMind(childInMind, _id, true);
+                        clickListenerInMind(childInMind, _id, inMintTv, true);
                         //clickListener(childInMind, _id, 1);
                     }
                     break;
@@ -267,8 +267,9 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-    public void clickListenerInMind(final View view, String _id, boolean visible){
+    public void clickListenerInMind(final View view, String _id, TextView _inMintTv, boolean visible){
         final View img =  ((ViewGroup)((ViewGroup)view).getChildAt(0)).getChildAt(1);
+        final TextView inMintTv = _inMintTv;
         final String ID = _id;
         if(!visible){
             img.setVisibility(View.INVISIBLE);
@@ -279,13 +280,11 @@ public class RecordActivity extends ActionBarActivity {
                     img.setVisibility(View.INVISIBLE);
                     view.setClickable(false);
                     dataBaseHelper.setInMind(ID, false);
+                    inMintTv.setText("0");
                 }
             });
         }
-
-
     }
-
 
     public void clickListenerDel(View _minus, View _del, View _rowLinearLayout, String _id){
         final View del = _del;

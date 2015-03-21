@@ -169,7 +169,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 1 WHERE _id="+id;
             Log.d("set inMind", "1" );
         }else{
-            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 0 WHERE _id="+id;
+            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 0, in_game = 0 WHERE _id="+id;
             Log.d("set inMind", "0" );
         }
 
