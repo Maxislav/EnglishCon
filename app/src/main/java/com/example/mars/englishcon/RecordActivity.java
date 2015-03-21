@@ -39,24 +39,24 @@ public class RecordActivity extends ActionBarActivity {
     DataBaseHelper dataBaseHelper;
 
     @Override
-    protected  void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
-        editTextEn = (EditText)findViewById(R.id.editTextEn);
-        editTextRu = (EditText)findViewById(R.id.editTextRu);
+        editTextEn = (EditText) findViewById(R.id.editTextEn);
+        editTextRu = (EditText) findViewById(R.id.editTextRu);
         dataBaseHelper = new DataBaseHelper(this);
-        mainLayout = (LinearLayout)findViewById(R.id.mainLayout);
+        mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
         setTitle("Edit");
         getData();
         editId = null;
     }
 
-    private void updateView(){
+    private void updateView() {
         mainLayout.removeAllViews();
         getData();
     }
 
-    private void getData(){
+    private void getData() {
         ArrayList<Map> arrayList = dataBaseHelper.selectData(1);
         if (arrayList != null) {
             for (Map map : arrayList) {
@@ -75,7 +75,7 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-    private void createItems(String en, String ru, String _id , String show_ru, String in_mind, String in_game){
+    private void createItems(String en, String ru, String _id, String show_ru, String in_mind, String in_game) {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_row_rec, mainLayout, false);
         LinearLayout rowLinearLayout = (LinearLayout) view;
@@ -87,21 +87,21 @@ public class RecordActivity extends ActionBarActivity {
 
             switch (i) {
                 case 0:
-                  //  child =;
-                    viewGroup2 = (ViewGroup)  viewGroup.getChildAt(i);
-                    child2 = ((ViewGroup)viewGroup2.getChildAt(0)).getChildAt(0); //TextView
-                   // child2 = ((ViewGroup)child2).getChildAt(0);
+                    //  child =;
+                    viewGroup2 = (ViewGroup) viewGroup.getChildAt(i);
+                    child2 = ((ViewGroup) viewGroup2.getChildAt(0)).getChildAt(0); //TextView
+                    // child2 = ((ViewGroup)child2).getChildAt(0);
                     ((TextView) child2).setText(en);
 
                     clickListener(child2, _id, 0, true); //TextView
-                    TextView inMintTv =   ((TextView)((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0));
+                    TextView inMintTv = ((TextView) ((ViewGroup) viewGroup2.getChildAt(1)).getChildAt(0));
                     inMintTv.setText(in_game);
 
                     childInMind = viewGroup2.getChildAt(2); //LinearLayout в котором img
-                    if(in_mind.equals("0")){
+                    if (in_mind.equals("0")) {
                         clickListenerInMind(childInMind, _id, inMintTv, false);
                         //childInMind.setVisibility(View.INVISIBLE);
-                    }else{
+                    } else {
                         clickListenerInMind(childInMind, _id, inMintTv, true);
                         //clickListener(childInMind, _id, 1);
                     }
@@ -112,10 +112,10 @@ public class RecordActivity extends ActionBarActivity {
                     child2 = viewGroup2.getChildAt(0);
                     ((TextView) child2).setText(ru);
                     clickListenerDel(
-                            ((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0),    //button minus
+                            ((ViewGroup) viewGroup2.getChildAt(1)).getChildAt(0),    //button minus
 
                             //((ViewGroup)((ViewGroup)((ViewGroup) rowLinearLayout).getChildAt(0)).getChildAt(2)).getChildAt(0), //dutton del
-                            ((ViewGroup) ((ViewGroup)((ViewGroup) ((ViewGroup)rowLinearLayout)
+                            ((ViewGroup) ((ViewGroup) ((ViewGroup) ((ViewGroup) rowLinearLayout)
                                     .getChildAt(0))
                                     .getChildAt(0))
                                     .getChildAt(1))
@@ -129,25 +129,19 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-
-
     @Override
     protected void onStart() {
-        //подключение к базе
-        SQLiteDatabase sdb = dataBaseHelper.getWritableDatabase();
-        dataBaseHelper.onCreate(sdb);
-        sdb.close();
-        dataBaseHelper.close();
         super.onStart();
-        overridePendingTransition( R.anim.translate_show, R.anim.translate_left_hide );
+        overridePendingTransition(R.anim.translate_show, R.anim.translate_left_hide);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
-       // getMenuInflater().inflate(R.menu.menu_main, menu);
+        // getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.action_bar_layout, null);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -169,7 +163,7 @@ public class RecordActivity extends ActionBarActivity {
 
         int id = item.getItemId();
 
-        Log.d("MyLog", id+"  : " + android.R.id.home);
+        Log.d("MyLog", id + "  : " + android.R.id.home);
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_record) {
             return true;
@@ -182,12 +176,12 @@ public class RecordActivity extends ActionBarActivity {
             return true;
         }
 
-        if(id==R.id.action_game){
+        if (id == R.id.action_game) {
             Intent intent = new Intent(this, GameActivity.class);
             startActivity(intent);
         }
 
-        if(id ==  android.R.id.home){
+        if (id == android.R.id.home) {
             Log.d("MyLog", "Home");
             finish();
             return true;
@@ -200,44 +194,51 @@ public class RecordActivity extends ActionBarActivity {
         String valueEn, valueRu;
         valueEn = editTextEn.getText().toString();
         valueRu = editTextRu.getText().toString();
-        //Log.d("replaceAll", valueEn);
-        valueEn = valueEn.replaceAll("^\\s+","");
-        valueRu = valueRu.replaceAll("^\\s+","");
-        Log.d("replaceAll", valueEn);
-
-        if(valueRu.isEmpty() || valueEn.isEmpty() ){
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "Пустое значение поля",
-                    Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }else{
-            cv.put(dataBaseHelper.VALUE_EN, valueEn );
-            cv.put(dataBaseHelper.VALUE_RU, valueRu);
-            cv.put(dataBaseHelper.SHOW_RU, 1);
-            cv.put(dataBaseHelper.IN_MIND, 0);
-            cv.put(dataBaseHelper.IN_GAME, 0);
-            long nDb = dataBaseHelper.insertMyRow(cv);
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "Добавлена заись №: " + nDb,
-                    Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-            editTextEn.setText("");
-            editTextRu.setText("");
-            updateView();
+        valueEn = valueEn.replaceAll("^\\s+", "");
+        valueRu = valueRu.replaceAll("^\\s+", "");
+        Toast toast;
+        int k = dataBaseHelper.addRow(valueEn, valueRu);
+        switch (k) {
+            case 0:
+                toast = Toast.makeText(getApplicationContext(),
+                        "Add value ok!",
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                editTextEn.setText("");
+                editTextRu.setText("");
+                updateView();
+                break;
+            case 1:
+                toast = Toast.makeText(getApplicationContext(),
+                        "Empty value",
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                break;
+            case 2:
+                toast = Toast.makeText(getApplicationContext(),
+                        "Value already exist",
+                        Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                break;
+            default:
         }
+
+
     }
+
     public void clickListener(View view, String _id, int n, boolean visible) {
         final String ID = _id;
         final int N = n;
 
         final View img;
-        switch (n){
+        switch (n) {
             case 1:
-                img = ((ViewGroup)((ViewGroup)view).getChildAt(0)).getChildAt(1);
-                if(!visible){
-                   img.setVisibility(View.INVISIBLE);
+                img = ((ViewGroup) ((ViewGroup) view).getChildAt(0)).getChildAt(1);
+                if (!visible) {
+                    img.setVisibility(View.INVISIBLE);
                 }
                 break;
             default:
@@ -247,18 +248,18 @@ public class RecordActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                switch (N){
+                switch (N) {
                     case 0:
-                        Map<String,String> map = dataBaseHelper.selectById(ID);
-                        Log.d(LOG, map.get("value_en")+": "+map.get("value_ru"));
+                        Map<String, String> map = dataBaseHelper.selectById(ID);
+                        Log.d(LOG, map.get("value_en") + ": " + map.get("value_ru"));
                         editTextEn.setText(map.get("value_en"));
                         editTextRu.setText(map.get("value_ru"));
                         editId = ID;
                         break;
                     case 1:
-                       // View _img = img;
-                       // img.setVisibility(View.INVISIBLE);
-                      //  dataBaseHelper.setInMind(ID, false);
+                        // View _img = img;
+                        // img.setVisibility(View.INVISIBLE);
+                        //  dataBaseHelper.setInMind(ID, false);
                         break;
                     default:
                 }
@@ -267,13 +268,13 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-    public void clickListenerInMind(final View view, String _id, TextView _inMintTv, boolean visible){
-        final View img =  ((ViewGroup)((ViewGroup)view).getChildAt(0)).getChildAt(1);
+    public void clickListenerInMind(final View view, String _id, TextView _inMintTv, boolean visible) {
+        final View img = ((ViewGroup) ((ViewGroup) view).getChildAt(0)).getChildAt(1);
         final TextView inMintTv = _inMintTv;
         final String ID = _id;
-        if(!visible){
+        if (!visible) {
             img.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -286,14 +287,15 @@ public class RecordActivity extends ActionBarActivity {
         }
     }
 
-    public void clickListenerDel(View _minus, View _del, View _rowLinearLayout, String _id){
+    public void clickListenerDel(View _minus, View _del, View _rowLinearLayout, String _id) {
         final View del = _del;
         final View minus = _minus;
         final String id = _id;
-        final View rowLinearLayout =  _rowLinearLayout;
-       // final  Animation anim;
+        final View rowLinearLayout = _rowLinearLayout;
+        // final  Animation anim;
         _minus.setOnClickListener(new View.OnClickListener() {
             Animation anim;
+
             @Override
             public void onClick(View v) {
                 if (del.isShown()) {
@@ -324,8 +326,9 @@ public class RecordActivity extends ActionBarActivity {
             }
         });
 
-        _del.setOnClickListener(new View.OnClickListener(){
+        _del.setOnClickListener(new View.OnClickListener() {
             Animation anim;
+
             @Override
             public void onClick(View v) {
                 anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
@@ -339,9 +342,9 @@ public class RecordActivity extends ActionBarActivity {
                         new Handler().post(new Runnable() {
                             public void run() {
 
-                                if(dataBaseHelper.delRowById(id)){
+                                if (dataBaseHelper.delRowById(id)) {
                                     mainLayout.removeView(rowLinearLayout);
-                                }else{
+                                } else {
                                     Toast toast = Toast.makeText(getApplicationContext(),
                                             "Ошибка удаления",
                                             Toast.LENGTH_SHORT);
@@ -350,8 +353,8 @@ public class RecordActivity extends ActionBarActivity {
                                 }
                             }
                         });
-                       // mainLayout.removeCh();
-                      //  del.setVisibility(View.INVISIBLE);
+                        // mainLayout.removeCh();
+                        //  del.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
@@ -365,14 +368,13 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-
-    public void clickBtnEdit(View view){
+    public void clickBtnEdit(View view) {
         boolean update = false;
-        if(editId !=null){
-            update =  dataBaseHelper.updateValueRow(editTextEn.getText().toString(), editTextRu.getText().toString(), editId);
+        if (editId != null) {
+            update = dataBaseHelper.updateValueRow(editTextEn.getText().toString(), editTextRu.getText().toString(), editId);
         }
 
-        if(update){
+        if (update) {
             updateView();
             editTextEn.setText("");
             editTextRu.setText("");
@@ -391,8 +393,8 @@ public class RecordActivity extends ActionBarActivity {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
-                            case  R.id.menuDel:
+                        switch (item.getItemId()) {
+                            case R.id.menuDel:
                                 Toast toast = Toast.makeText(getApplicationContext(),
                                         "Данные удалены",
                                         Toast.LENGTH_SHORT);
@@ -407,9 +409,8 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-
     //создание колонки
-    public void createColumn(View view){
+    public void createColumn(View view) {
         //dataBaseHelper.createColumn();
     }
 

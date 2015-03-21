@@ -11,6 +11,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,18 +20,13 @@ import java.util.Map;
 
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    /*public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }*/
+
 
     SQLiteDatabase myBase;
-
     private static final String DATABASE_NAME = "en.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "dictionary";
-
     public static final String UID = "_id";
-    //  public static final String CATNAME = "catname";
     public static final String VALUE_EN = "value_en";
     public static final String VALUE_RU = "value_ru";
     public static final String SHOW_RU = "show_ru";
@@ -60,17 +57,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public long insertMyRow(ContentValues cv) {
-        long i;
-        SQLiteDatabase sdb = this.getWritableDatabase();
 
-
-        i = sdb.insert(this.TABLE_NAME, null, cv);
-        Log.d("DataBaseHelper", i + "");
-        sdb.close();
-        return i;
-
-    }
 
 
     public ArrayList<Map> selectData(int inMind) {
@@ -148,13 +135,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             jquery = "UPDATE " + this.TABLE_NAME+" SET show_ru = 1 WHERE _id="+id;
             Log.d("set show_ru", "1" );
         }
-
-       // jquery = "UPDATE " + this.TABLE_NAME+" SET show_ru = 1 ";
-
         sdb.execSQL(jquery);
         sdb.close();
+    }
+
+    public long insertMyRow(ContentValues cv) {
+        long i;
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        i = sdb.insert(this.TABLE_NAME, null, cv);
+        Log.d("DataBaseHelper", i + "");
+        sdb.close();
+        return i;
 
     }
+
+    public int addRow(String valueEn, String valueRu){
+        ContentValues cv = new ContentValues();
+        String jquery, valueEnInBase = "";
+
+        if(valueRu.isEmpty() || valueEn.isEmpty() ){
+          return 1;
+        }
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        jquery = "SELECT "+VALUE_EN+" FROM "+TABLE_NAME+" WHERE " +VALUE_EN +"='"+valueEn+"' ";
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        while (cursor.moveToNext()) {
+            valueEnInBase = cursor.getString(cursor.getColumnIndex(VALUE_EN));
+        }
+        if (!valueEnInBase.isEmpty()){
+            return 2;
+        }
+
+
+        cv.put(VALUE_EN, valueEn );
+        cv.put(VALUE_RU, valueRu);
+        cv.put(SHOW_RU, 1);
+        cv.put(IN_MIND, 0);
+        cv.put(IN_GAME, 0);
+
+
+        sdb.insert(TABLE_NAME, null, cv);
+        sdb.close();
+
+
+        return 0;
+    }
+
     public void setInMind(String id, boolean in_mind){
         String jquery;
         String inMind = "0";

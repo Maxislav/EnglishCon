@@ -47,18 +47,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         reverse = false;
         setTitle("Learn");
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
-
         themes = getTheme();
-
         dataBaseHelper = new DataBaseHelper(this); //подключение к базе
-        SQLiteDatabase sdb = dataBaseHelper.getWritableDatabase();
-        sdb.close();
-        dataBaseHelper.close();
+      //  SQLiteDatabase sdb = dataBaseHelper.getWritableDatabase();
+      //  sdb.close();
+       // dataBaseHelper.close();
         selectDataFromDataBase();
     }
 
