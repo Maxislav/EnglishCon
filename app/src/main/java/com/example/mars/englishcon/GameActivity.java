@@ -269,6 +269,7 @@ public class GameActivity extends ActionBarActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.setClickable(false);
                 Map<String, View> map = new HashMap<String, View>();
                 fillTex += letter;
                 fillTextVeiw.setText(fillTex);
@@ -283,7 +284,6 @@ public class GameActivity extends ActionBarActivity {
                 Animation    anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_out);
                 _v.startAnimation(anim);
                 anim.setAnimationListener(new Animation.AnimationListener() {
-
                     @Override
                     public void onAnimationStart(Animation animation) {
 
@@ -292,6 +292,7 @@ public class GameActivity extends ActionBarActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         _v.setVisibility(View.INVISIBLE);
+                        _v.setClickable(true);
                     }
 
                     @Override

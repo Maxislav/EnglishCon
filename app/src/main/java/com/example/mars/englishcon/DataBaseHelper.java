@@ -107,6 +107,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             String valueRu = cursor.getString(cursor.getColumnIndex(this.VALUE_RU));
             String show_ru = cursor.getString(cursor.getColumnIndex(this.SHOW_RU));
             String in_mind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
+            String in_game = cursor.getString(cursor.getColumnIndex(this.IN_GAME));
 
             Log.d("LOG_TAG", "ROW " + id + " EN: " + valueEn + " RU: " + valueRu+" SHOW_RU: " +show_ru+ " IN_MIND: "+in_mind);
 
@@ -116,6 +117,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             map.put("RU", valueRu);
             map.put("SHOW_RU", show_ru);
             map.put("IN_MIND", in_mind);
+            map.put("IN_GAME", in_game);
             arrayList.add(map);
         }
         sdb.close();
@@ -172,14 +174,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
 
-      /*
-        if(inMind.equals("0")){
-            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 1 WHERE _id="+id;
-            Log.d("set inMind", "1" );
-        }else{
-            jquery = "UPDATE " + this.TABLE_NAME+" SET in_mind = 0 WHERE _id="+id;
-            Log.d("set inMind", "0" );
-        }*/
+
         sdb.execSQL(jquery);
         sdb.close();
 

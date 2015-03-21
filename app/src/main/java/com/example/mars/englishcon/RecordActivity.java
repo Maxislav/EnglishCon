@@ -65,8 +65,9 @@ public class RecordActivity extends ActionBarActivity {
                 String _id = map.get("ID").toString();
                 String show_ru = map.get("SHOW_RU").toString();
                 String in_mind = map.get("IN_MIND").toString();
+                String in_game = map.get("IN_GAME").toString();
                 // Log.d("SHOW_RU", show_ru);
-                createItems(valueEn, valueRu, _id, show_ru, in_mind);
+                createItems(valueEn, valueRu, _id, show_ru, in_mind, in_game);
             }
         } else {
             return;
@@ -74,7 +75,7 @@ public class RecordActivity extends ActionBarActivity {
     }
 
 
-    private void createItems(String en, String ru, String _id , String show_ru, String in_mind){
+    private void createItems(String en, String ru, String _id , String show_ru, String in_mind, String in_game){
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_row_rec, mainLayout, false);
         LinearLayout rowLinearLayout = (LinearLayout) view;
@@ -86,18 +87,23 @@ public class RecordActivity extends ActionBarActivity {
 
             switch (i) {
                 case 0:
-                    child = viewGroup.getChildAt(i);
-                    viewGroup2 = (ViewGroup) child;
-                    child2 = viewGroup2.getChildAt(0); //TextView
-                    child2 = ((ViewGroup)child2).getChildAt(0);
+                  //  child =;
+                    viewGroup2 = (ViewGroup)  viewGroup.getChildAt(i);
+                    child2 = ((ViewGroup)viewGroup2.getChildAt(0)).getChildAt(0); //TextView
+                   // child2 = ((ViewGroup)child2).getChildAt(0);
                     ((TextView) child2).setText(en);
-                    clickListener(child2, _id, 0);
 
-                    childInMind = viewGroup2.getChildAt(1); //Img
+                    clickListener(child2, _id, 0, true); //TextView
+
+                    ((TextView)((ViewGroup)viewGroup2.getChildAt(1)).getChildAt(0)).setText(in_game);
+
+                    childInMind = viewGroup2.getChildAt(2); //LinearLayout в котором img
                     if(in_mind.equals("0")){
-                        childInMind.setVisibility(View.INVISIBLE);
+                        clickListenerInMind(childInMind, _id, false);
+                        //childInMind.setVisibility(View.INVISIBLE);
                     }else{
-                        clickListener(childInMind, _id, 1);
+                        clickListenerInMind(childInMind, _id, true);
+                        //clickListener(childInMind, _id, 1);
                     }
                     break;
                 case 1:
@@ -222,10 +228,23 @@ public class RecordActivity extends ActionBarActivity {
             updateView();
         }
     }
-    public void clickListener(View view, String _id, int n) {
+    public void clickListener(View view, String _id, int n, boolean visible) {
         final String ID = _id;
         final int N = n;
+
+        final View img;
+        switch (n){
+            case 1:
+                img = ((ViewGroup)((ViewGroup)view).getChildAt(0)).getChildAt(1);
+                if(!visible){
+                   img.setVisibility(View.INVISIBLE);
+                }
+                break;
+            default:
+        }
+
         view.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 switch (N){
@@ -237,14 +256,37 @@ public class RecordActivity extends ActionBarActivity {
                         editId = ID;
                         break;
                     case 1:
-                        v.setVisibility(View.INVISIBLE);
-                        dataBaseHelper.setInMind(ID, false);
+                       // View _img = img;
+                       // img.setVisibility(View.INVISIBLE);
+                      //  dataBaseHelper.setInMind(ID, false);
                         break;
                     default:
                 }
             }
         });
     }
+
+
+    public void clickListenerInMind(final View view, String _id, boolean visible){
+        final View img =  ((ViewGroup)((ViewGroup)view).getChildAt(0)).getChildAt(1);
+        final String ID = _id;
+        if(!visible){
+            img.setVisibility(View.INVISIBLE);
+        }else{
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    img.setVisibility(View.INVISIBLE);
+                    view.setClickable(false);
+                    dataBaseHelper.setInMind(ID, false);
+                }
+            });
+        }
+
+
+    }
+
+
     public void clickListenerDel(View _minus, View _del, View _rowLinearLayout, String _id){
         final View del = _del;
         final View minus = _minus;
