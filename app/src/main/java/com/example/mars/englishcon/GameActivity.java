@@ -52,6 +52,7 @@ public class GameActivity extends ActionBarActivity {
     private LinearLayout rowLinearLayout;
     private DataBaseHelper dataBaseHelper;
     private String currentId;
+    private TextView tvInMind, tvReady, tvCurrent;
     ArrayList<Map> arrayList;
 
 
@@ -82,6 +83,9 @@ public class GameActivity extends ActionBarActivity {
         inflater = getLayoutInflater();
         nElements = 0;
         summWidth = 0;
+        tvInMind = (TextView)findViewById(R.id.tvInMind);
+        tvReady = (TextView)findViewById(R.id.tvReady);
+        tvCurrent = (TextView)findViewById(R.id.tvCurrent);
         onInit();
 
     }
@@ -156,31 +160,10 @@ public class GameActivity extends ActionBarActivity {
             arrayValues = mixValue.split("");
             elementsLength = arrayValues.length;
             arrayList = new ArrayList<Map>();
-
             generate();
-            //createRow();
+            getCountInMind();
+            getCountReady();
         }
-
-        /*
-
-        Map<String, String> map = dataBaseHelper.getRundom();
-        value = map.get("EN");
-        findTextView.setText(map.get("RU"));
-        nElements = 0;
-        fillTex ="";
-        arrayValues = value.split("");
-        ArrayList<String> imgList = new ArrayList<String>(Arrays.asList(arrayValues));
-        long seed = System.nanoTime();
-        Collections.shuffle(imgList, new Random(seed));
-        String mix = "";
-        for (String item : imgList) {
-            String a = item;
-            if (!item.isEmpty()) {
-                Log.d(LOG, "char: " + a.toString());
-                mix += a.toString();
-            }
-        }*/
-
     }
 
     private void generate() {
@@ -193,6 +176,9 @@ public class GameActivity extends ActionBarActivity {
         value = map.get("EN");
         currentId =  map.get("ID");
         findTextView.setText(map.get("RU"));
+
+        tvCurrent.setText(map.get("IN_GAME"));
+
         nElements = 0;
         fillTex = "";
         arrayValues = value.split("");
@@ -340,16 +326,34 @@ public class GameActivity extends ActionBarActivity {
     }
 
     private class MyHundler  extends Handler{
+        public static final int ID_0 = 0;
+        public static final int ID_1 = 1;
+        public static final int ID_2 = 2;
         @Override
         public void handleMessage(android.os.Message msg) {
-            Log.d(LOG, msg.obj.toString());
 
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    msg.obj.toString(),
-                    Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP, 0, 0);
-            toast.show();
-            regenParam();
+            switch (msg.what){
+                case 0:
+                    Log.d(LOG, msg.obj.toString());
+
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            msg.obj.toString(),
+                            Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
+                    regenParam();
+                    break;
+                case 1:
+                    tvInMind.setText(msg.obj.toString());
+                    break;
+                case 2:
+                    tvReady.setText(msg.obj.toString());
+                    break;
+                default:
+
+            }
+
+
         }
     }
     public void clickTip(View view){
@@ -360,17 +364,51 @@ public class GameActivity extends ActionBarActivity {
         toast.show();
     }
 
+    private void getCountInMind(){
+       final Handler h = new MyHundler();
+        Thread thread;
+        thread = new Thread() {
+            public void run() {
+                try {
+                    int n =  dataBaseHelper.countRow(dataBaseHelper.IN_MIND+" = 1 ");
+                    Message msg = Message.obtain(h, MyHundler.ID_1);
+                    msg.obj = n+"";
+                    h.sendMessage(msg);
+                } catch (Exception e) {
+                    Log.e(LOG,"Err dataBaseHelper.IN_MIND: " , e);
+                }
+            }
+        };
+        thread.start();
+    }
+    private void getCountReady(){
+        final Handler h = new MyHundler();
+        Thread thread;
+        thread = new Thread() {
+            public void run() {
+                try {
+                    int n =  dataBaseHelper.countRow(dataBaseHelper.IN_GAME+"='"+dataBaseHelper.maxCountRepeat+"' ");
+                    Message msg = Message.obtain(h, MyHundler.ID_2);
+                    msg.obj = n+"";
+                    h.sendMessage(msg);
+                } catch (Exception e) {
+                    Log.e(LOG,"Err dataBaseHelper.IN_GAME: " , e);
+                }
+            }
+        };
+        thread.start();
+    }
+
     private void checkNext() {
         if (fillTex.equals(value)) {
             final int n = dataBaseHelper.setGame(currentId, true);
             final Handler h = new MyHundler();
             Thread thread;
             thread = new Thread() {
-
                 public void run() {
                     try {
                         Thread.sleep(500);
-                        Message msg = Message.obtain(h);
+                        Message msg = Message.obtain(h, MyHundler.ID_0);
                         msg.obj = "Correct result:" +n;
                         h.sendMessage(msg);
                     } catch (InterruptedException e) {

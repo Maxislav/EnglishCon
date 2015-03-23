@@ -80,21 +80,22 @@
             android:layout_height="match_parent"
             android:gravity="bottom"
             android:orientation="vertical">
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5px">
+                android:padding="5px"
+                android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4">
+                    android:layout_weight="1">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18dp"
-                        android:text="In mind" />
+                        android:textColor="#FFF"
+                        android:layout_marginRight="5dp"
+                        android:text="Ready: " android:gravity="right"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -104,10 +105,43 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18dp"
+                        android:textColor="#FFF"
+                        android:id="@+id/tvReady"
+                        android:text="..." />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5px">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18dp"
+                        android:layout_marginRight="5dp"
+                        android:textColor="#FFF"
+                        android:text="In mind: " android:gravity="right" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18dp"
+                        android:textColor="#FFF"
                         android:id="@+id/tvInMind"
                         android:text="..." />
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -116,22 +150,25 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.4">
+                    android:layout_weight="1">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18dp"
-                        android:text="Ready" />
+                        android:textColor="#FFF"
+                        android:layout_marginRight="5dp"
+                        android:text="Current: " android:gravity="right"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.1">
+                    android:layout_weight="1">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="18dp"
-                        android:id="@+id/tvReady"
+                        android:textColor="#FFF"
+                        android:id="@+id/tvCurrent"
                         android:text="..." />
                 </LinearLayout>
             </LinearLayout>
@@ -170,6 +207,7 @@
 
                     android:textStyle="bold" />
             </LinearLayout>
+
         </LinearLayout>
 
 

@@ -129,8 +129,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             arrayList.add(map);
         }
         sdb.close();
-
         return  arrayList;
+    }
+
+    public synchronized int countRow(String where){
+
+        int i = 0;
+        String jquery;
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        if(where.isEmpty()){
+            jquery =  "SELECT * FROM "+TABLE_NAME;
+        }else{
+            jquery =  "SELECT * FROM "+TABLE_NAME+" WHERE " + where;
+        }
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        try {
+            cursor = sdb.rawQuery(jquery,null);
+        } catch (Exception e) {
+            Log.d("MyLog", "Error select where");
+        }
+        Map<String, String> map;
+        while (cursor.moveToNext()) {
+            i++;
+        }
+        sdb.close();
+        return i;
     }
 
 
