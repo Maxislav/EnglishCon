@@ -46,18 +46,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d("DataBaseHelper", "DataBaseHelper Create");
         db.execSQL(SQL_CREATE_ENTRIES);
-
         fill(db, "hello", "привет");
         fill(db, "world", "мир");
-
-       // db.close();
-
-       // sdb.insert(TABLE_NAME, null, cv);
-
-
-        //db.close();
-      //  addRow("Hello", "привет");
-
     }
 
     public void fill(SQLiteDatabase db, String valueEn, String valueRu){
@@ -99,8 +89,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             String show_ru = cursor.getString(cursor.getColumnIndex(this.SHOW_RU));
             String in_mind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
             String in_game = cursor.getString(cursor.getColumnIndex(this.IN_GAME));
-
-//            Log.d("LOG_TAG", "ROW " + id + " EN: " + valueEn + " RU: " + valueRu+" SHOW_RU: " +show_ru+ " IN_MIND: "+in_mind);
 
             map = new HashMap<String, String>();
             map.put("ID", id + "");
