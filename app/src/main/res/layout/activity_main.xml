@@ -23,6 +23,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
+                    android:textSize="18dp"
                     android:text="Learn" />
                 <Button
                     style="@style/btn"

@@ -44,11 +44,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("DataBaseHelper", "Create");
+        Log.d("DataBaseHelper", "DataBaseHelper Create");
         db.execSQL(SQL_CREATE_ENTRIES);
+
+        fill(db, "hello", "привет");
+        fill(db, "world", "мир");
+
+       // db.close();
+
+       // sdb.insert(TABLE_NAME, null, cv);
+
+
+        //db.close();
+      //  addRow("Hello", "привет");
+
     }
 
-
+    public void fill(SQLiteDatabase db, String valueEn, String valueRu){
+        ContentValues cv = new ContentValues();
+        cv.put(VALUE_EN, valueEn );
+        cv.put(VALUE_RU, valueRu);
+        cv.put(SHOW_RU, 1);
+        cv.put(IN_MIND, 0);
+        cv.put(IN_GAME, 0);
+        db.insert(TABLE_NAME, null, cv);
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -373,7 +393,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ArrayList<Map> arrayList = selectData(2);
         Log.d("MyLog","arrayList size:"+ arrayList.size()+"");
         int n = random_int(0,arrayList.size());
-        map = arrayList.get(n);
+        //Log.d("MyLog", n+"");
+        if(0<arrayList.size()){
+            map = arrayList.get(n);
+        }
         return map;
     }
 

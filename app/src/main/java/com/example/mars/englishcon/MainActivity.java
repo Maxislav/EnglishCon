@@ -232,14 +232,14 @@ public class MainActivity extends ActionBarActivity {
 
     public void selectDataFromDataBase() {
        // mainLayout.removeAllViews();
-        if (dataBaseHelper.selectData(0) != null) {
-            ArrayList<Map> arrayList = dataBaseHelper.selectData(0);
+        ArrayList<Map> arrayList = dataBaseHelper.selectData(0);
+        if (arrayList != null) {
+          //  ArrayList<Map> arrayList = dataBaseHelper.selectData(0);
             for (Map map : arrayList) {
                 String valueEn = map.get("EN").toString();
                 String valueRu = map.get("RU").toString();
                 String _id = map.get("ID").toString();
                 String show_ru = map.get("SHOW_RU").toString();
-             //  Log.d("SHOW_RU", show_ru);
                 createItems(valueEn, valueRu, _id, show_ru);
             }
         } else {

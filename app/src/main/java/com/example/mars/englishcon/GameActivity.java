@@ -157,6 +157,9 @@ public class GameActivity extends ActionBarActivity {
     public void onInit() {
         if (value == null) {
             mixValue = getRandom();
+            if(mixValue.isEmpty()){
+                return;
+            }
             arrayValues = mixValue.split("");
             elementsLength = arrayValues.length;
             arrayList = new ArrayList<Map>();
@@ -173,12 +176,14 @@ public class GameActivity extends ActionBarActivity {
 
     private String getRandom() {
         Map<String, String> map = dataBaseHelper.getRundom();
+        if(map.size()<1){
+            return "";
+        }
+
         value = map.get("EN");
         currentId =  map.get("ID");
         findTextView.setText(map.get("RU"));
-
         tvCurrent.setText(map.get("IN_GAME"));
-
         nElements = 0;
         fillTex = "";
         arrayValues = value.split("");
