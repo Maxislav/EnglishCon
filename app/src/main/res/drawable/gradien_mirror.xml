@@ -7,4 +7,5 @@
         android:centerY="0.7"
         android:endColor="#7b335267"
         android:angle="90"/>
+
 </shape>
