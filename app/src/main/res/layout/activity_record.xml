@@ -1,94 +1,177 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/globalLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
-
-    >
+    android:background="@drawable/gradient">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <RelativeLayout
+            android:id="@+id/animationContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/gradient">
+            android:layout_height="100dp"
+            android:background="@drawable/gradient"
+            android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/textContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="0dp">
+                android:orientation="vertical"
+                android:padding="0dp"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/shadow"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:padding="10dp">
+
+                        <EditText
+                            android:id="@+id/editTextEn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#fff"
+                            android:inputType="textMultiLine"
+                            android:singleLine="false" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/shadow"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:padding="10dp">
+                        <EditText
+                            android:id="@+id/editTextRu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#fff"
+                            android:inputType="textMultiLine"
+                            android:singleLine="false" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5px">
+                    <Button
+                        android:id="@+id/btnEdit"
+                        style="@style/btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="clickBtnEdit"
+                        android:text="Apply edit"
+                        android:visibility="gone" />
+                    <Button
+                        style="@style/btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="clickCancelAdd"
+                        android:text="Cancel" />
+                    <Button
+                        style="@style/btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="clickBtnAdd"
+                        android:text="Add" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/searchContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:background="@drawable/shadow"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:padding="10dp">
+                    android:orientation="vertical"
+                    android:paddingBottom="0dp"
+                    android:paddingTop="0dp">
 
-                    <EditText
-                        android:id="@+id/editTextEn"
+                    <SearchView
+                        android:id="@+id/searchView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#fff"
-                        android:inputType="textMultiLine"
-                        android:singleLine="false" />
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="-5dp"
+                        android:measureWithLargestChild="false"
+                        android:paddingLeft="0dp" />
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Show by filters"
+                    android:textSize="12dp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/shadow"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:padding="10dp">
-                    <EditText
-                        android:id="@+id/editTextRu"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/btnSmall"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#fff"
-                        android:inputType="textMultiLine"
-                        android:singleLine="false" />
+                        android:layout_weight="1"
+                        android:onClick="clickAll"
+                        android:text="All" />
+
+                    <Button
+                        style="@style/btnSmall"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="clickInMind"
+                        android:text="In mind" />
+
+                    <Button
+                        style="@style/btnSmall"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="clickReady"
+                        android:text="Ready" />
+
+                    <Button
+                        style="@style/btnSmall"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:onClick="clickProcess"
+                        android:text="Process" />
+
+                    <Button
+                        style="@style/btnSmall"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="clickNew"
+                        android:text="New" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/gradien_mirror"
-            android:orientation="horizontal">
-
-            <Button
-                style="@style/btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="clickBtnAdd"
-                android:text="Add word"
-                android:layout_marginRight="-5dp" />
-
-            <Button
-                style="@style/btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="clickBtnEdit"
-                android:text="Apply edit"
-                />
-
-           <!-- <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-5dp"
-                android:layout_weight="1"
-                android:onClick="createColumn"
-                android:text="SET" />-->
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,6 +188,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"></LinearLayout>
             </ScrollView>
+
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

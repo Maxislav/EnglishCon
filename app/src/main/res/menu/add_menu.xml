@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/add_word"
+        android:title="Add word"
+        android:orderInCategory="4"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/edit_word"
+        android:title="Edit word"
+        android:orderInCategory="5"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/search_word"
+        android:title="Search"
+        android:orderInCategory="6"
+        app:showAsAction="ifRoom" />
+</menu>

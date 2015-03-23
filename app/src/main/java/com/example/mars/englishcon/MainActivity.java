@@ -5,7 +5,6 @@ import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -96,7 +95,8 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.action_record) {
             Intent questionIntent = new Intent(this, RecordActivity.class);
-            startActivityForResult(questionIntent, CHOOSE_THIEF);
+          //  startActivityForResult(questionIntent, CHOOSE_THIEF);
+            startActivity(questionIntent);
             return true;
         }
 
@@ -189,9 +189,7 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
-
                 }
-
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     Log.d("End", "Anim end");

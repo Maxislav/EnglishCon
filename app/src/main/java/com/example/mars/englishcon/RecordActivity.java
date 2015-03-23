@@ -3,7 +3,6 @@ package com.example.mars.englishcon;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -17,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,15 +30,21 @@ import java.util.Map;
 
 public class RecordActivity extends ActionBarActivity {
 
-
     EditText editTextEn;
     EditText editTextRu;
+    SearchView searchView;
     LinearLayout mainLayout;
-    private final static String LOG = "RecortActivity";
+    private final static String LOG = "MyLog";
     private static String editId;
-
+    private  ArrayList<Map> arrayList;
+    private RelativeLayout relativeLayout;
     public final static String THIEF = "com.example.mars.englishcon.THIEF";
     DataBaseHelper dataBaseHelper;
+    RelativeLayout animationContainer;
+    LinearLayout textContainer, searchContainer;
+    Button btnEdit;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,89 +54,19 @@ public class RecordActivity extends ActionBarActivity {
         editTextRu = (EditText) findViewById(R.id.editTextRu);
         dataBaseHelper = new DataBaseHelper(this);
         mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+        searchView = (SearchView)findViewById(R.id.searchView);
+        relativeLayout = (RelativeLayout)findViewById(R.id.globalLayout);
+
+        animationContainer = (RelativeLayout)findViewById(R.id.animationContainer); // Parent container
+        textContainer = (LinearLayout)findViewById(R.id.textContainer); //text fields
+
+        searchContainer = (LinearLayout)findViewById(R.id.searchContainer); // buttons
+        btnEdit = (Button)findViewById(R.id.btnEdit); // button edit
+
         setTitle("Edit");
-        getData();
+        _init();
         editId = null;
     }
-
-    private void updateView() {
-        mainLayout.removeAllViews();
-        getData();
-    }
-
-    private void getData() {
-        ArrayList<Map> arrayList = dataBaseHelper.selectData(1);
-        if (arrayList != null) {
-            for (Map map : arrayList) {
-                String valueEn = map.get("EN").toString();
-                String valueRu = map.get("RU").toString();
-                String _id = map.get("ID").toString();
-                String show_ru = map.get("SHOW_RU").toString();
-                String in_mind = map.get("IN_MIND").toString();
-                String in_game = map.get("IN_GAME").toString();
-                // Log.d("SHOW_RU", show_ru);
-                createItems(valueEn, valueRu, _id, show_ru, in_mind, in_game);
-            }
-        } else {
-            return;
-        }
-    }
-
-
-    private void createItems(String en, String ru, String _id, String show_ru, String in_mind, String in_game) {
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.layout_row_rec, mainLayout, false);
-        LinearLayout rowLinearLayout = (LinearLayout) view;
-        mainLayout.addView(rowLinearLayout);
-        ViewGroup viewGroup = (ViewGroup) rowLinearLayout;
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View child, child2, child3, childInMind;
-            ViewGroup viewGroup2;
-
-            switch (i) {
-                case 0:
-                    //  child =;
-                    viewGroup2 = (ViewGroup) viewGroup.getChildAt(i);
-                    child2 = ((ViewGroup) viewGroup2.getChildAt(0)).getChildAt(0); //TextView
-                    // child2 = ((ViewGroup)child2).getChildAt(0);
-                    ((TextView) child2).setText(en);
-
-                    clickListener(child2, _id, 0, true); //TextView
-                    TextView inMintTv = ((TextView) ((ViewGroup) viewGroup2.getChildAt(1)).getChildAt(0));
-                    inMintTv.setText(in_game);
-
-                    childInMind = viewGroup2.getChildAt(2); //LinearLayout в котором img
-                    if (in_mind.equals("0")) {
-                        clickListenerInMind(childInMind, _id, inMintTv, false);
-                        //childInMind.setVisibility(View.INVISIBLE);
-                    } else {
-                        clickListenerInMind(childInMind, _id, inMintTv, true);
-                        //clickListener(childInMind, _id, 1);
-                    }
-                    break;
-                case 1:
-                    child = viewGroup.getChildAt(i);
-                    viewGroup2 = (ViewGroup) child;
-                    child2 = viewGroup2.getChildAt(0);
-                    ((TextView) child2).setText(ru);
-                    clickListenerDel(
-                            ((ViewGroup) viewGroup2.getChildAt(1)).getChildAt(0),    //button minus
-
-                            //((ViewGroup)((ViewGroup)((ViewGroup) rowLinearLayout).getChildAt(0)).getChildAt(2)).getChildAt(0), //dutton del
-                            ((ViewGroup) ((ViewGroup) ((ViewGroup) ((ViewGroup) rowLinearLayout)
-                                    .getChildAt(0))
-                                    .getChildAt(0))
-                                    .getChildAt(1))
-                                    .getChildAt(0), //dutton del
-                            rowLinearLayout,
-                            _id);
-                    break;
-            }
-        }
-
-    }
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -137,10 +75,9 @@ public class RecordActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //super.onCreateOptionsMenu(menu);
-        // getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.add_menu, menu);
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.action_bar_layout, null);
         ActionBar actionBar = getSupportActionBar();
@@ -148,9 +85,9 @@ public class RecordActivity extends ActionBarActivity {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setHomeButtonEnabled(true);
-        //  actionBar.setIcon(R.drawable.en_con);
         actionBar.setCustomView(v);
         menu.findItem(R.id.action_record).setVisible(false);
+
         return true;
     }
 
@@ -180,6 +117,21 @@ public class RecordActivity extends ActionBarActivity {
             Intent intent = new Intent(this, GameActivity.class);
             startActivity(intent);
         }
+        if (id == R.id.add_word) {
+
+            animationAddWord(false);
+            return true;
+        }
+
+        if(id==R.id.search_word){
+            animationSearch();
+            return true;
+        }
+
+        if(id==R.id.edit_word){
+            animationEdit();
+            return true;
+        }
 
         if (id == android.R.id.home) {
             Log.d("MyLog", "Home");
@@ -188,6 +140,259 @@ public class RecordActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    public void clickAll(View view){
+        this.arrayList = dataBaseHelper.selectDataByWhere("");
+        mainLayout.removeAllViews();
+        createItems();
+    }
+
+    public  void clickInMind(View view){
+        this.arrayList = dataBaseHelper.selectDataByWhere(dataBaseHelper.IN_MIND+"=1");
+        mainLayout.removeAllViews();
+        createItems();
+    }
+
+    public void clickReady(View view){
+        this.arrayList = dataBaseHelper.selectDataByWhere(dataBaseHelper.IN_GAME +"="+ dataBaseHelper.maxCountRepeat);
+        mainLayout.removeAllViews();
+        createItems();
+    }
+
+    public void clickProcess(View view){
+        this.arrayList = dataBaseHelper.selectDataByWhere(dataBaseHelper.IN_GAME +"<"+ dataBaseHelper.maxCountRepeat +" AND " + dataBaseHelper.IN_MIND+"=1" );
+        mainLayout.removeAllViews();
+        createItems();
+    }
+    public void clickNew(View view){
+        this.arrayList = dataBaseHelper.selectDataByWhere(dataBaseHelper.IN_MIND+"=0" );
+        mainLayout.removeAllViews();
+        createItems();
+    }
+
+
+
+
+
+
+
+    public void clickCancelAdd(View v){
+        resetParam();
+        animationSearch();
+    }
+
+
+    private void resetParam(){
+        editTextEn.setText("");
+        editTextRu.setText("");
+    }
+
+    private void animationEdit(){
+        animationAddWord(true);
+    }
+
+    private void animationSearch(){
+        if(textContainer.isShown()){
+            animationOut(textContainer);
+        }
+        if(!searchContainer.isShown()){
+            animationIn(searchContainer, false);
+        }
+    }
+
+    private void animationAddWord(boolean k){
+        if(searchContainer.isShown()){
+            animationOut(searchContainer);
+        }
+        if(!textContainer.isShown()){
+            animationIn(textContainer, k);
+        }else{
+            if(k){
+                btnEdit.setVisibility(View.VISIBLE);
+            }else{
+                btnEdit.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void animationIn(View _v, boolean _k){
+        final View v = _v;
+        final boolean k = _k;
+        Animation animOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_top_in);
+        v.startAnimation(animOut);
+        animOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if(k){
+                    btnEdit.setVisibility(View.VISIBLE);
+                }else{
+                    btnEdit.setVisibility(View.GONE);
+                }
+                v.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void animationOut(View _v){
+        final View v = _v;
+        Animation animOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_bottom_out);
+        v.startAnimation(animOut);
+        animOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setVisibility(View.GONE);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+
+
+
+    private void getListData(){
+       this.arrayList = dataBaseHelper.selectData(1);
+       createItems();
+    }
+    private void getListDataLike(String like){
+        this.arrayList = dataBaseHelper.selectDataLike(like);
+        mainLayout.removeAllViews();
+        createItems();
+    }
+    private void updateView() {
+        mainLayout.removeAllViews();
+        getListData();
+    }
+
+    private void _init() {
+        getListData();
+        Log.d(LOG,"init");
+        relativeLayout.setOnClickListener(new  View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG,"global click");
+            }
+        } );
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d(LOG, "onQueryTextSubmit: " + query);
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                Log.d(LOG, "onQueryTextChange: " + newText);
+                getListDataLike(newText);
+
+                return false;
+            }
+        });
+
+        searchView.setOnFocusChangeListener(new SearchView.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.d(LOG, "onFocusChange: " + hasFocus);
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Log.d(LOG, " searchView onClose");
+                getListData();
+                return false;
+            }
+        });
+    }
+    private void createItems(){
+        if (this.arrayList != null) {
+            for (Map map : this.arrayList) {
+                String valueEn = map.get("EN").toString();
+                String valueRu = map.get("RU").toString();
+                String _id = map.get("ID").toString();
+                String show_ru = map.get("SHOW_RU").toString();
+                String in_mind = map.get("IN_MIND").toString();
+                String in_game = map.get("IN_GAME").toString();
+                createItem(valueEn, valueRu, _id, show_ru, in_mind, in_game);
+            }
+        } else {
+            return;
+        }
+    }
+
+    private void createItem(String en, String ru, String _id, String show_ru, String in_mind, String in_game) {
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.layout_row_rec, mainLayout, false);
+        LinearLayout rowLinearLayout = (LinearLayout) view;
+        mainLayout.addView(rowLinearLayout);
+        ViewGroup viewGroup = (ViewGroup) rowLinearLayout;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child, child2, child3, childInMind;
+            ViewGroup viewGroup2;
+
+            switch (i) {
+                case 0:
+                    viewGroup2 = (ViewGroup) viewGroup.getChildAt(i);
+                    child2 = ((ViewGroup) viewGroup2.getChildAt(0)).getChildAt(0); //TextView
+                    ((TextView) child2).setText(en);
+
+                    clickListener(child2, _id, 0, true); //TextView
+                    TextView inMintTv = ((TextView) ((ViewGroup) viewGroup2.getChildAt(1)).getChildAt(0));
+                    inMintTv.setText(in_game);
+
+                    childInMind = viewGroup2.getChildAt(2); //LinearLayout в котором img
+                    if (in_mind.equals("0")) {
+                        clickListenerInMind(childInMind, _id, inMintTv, false);
+                    } else {
+                        clickListenerInMind(childInMind, _id, inMintTv, true);
+                    }
+                    break;
+                case 1:
+                    child = viewGroup.getChildAt(i);
+                    viewGroup2 = (ViewGroup) child;
+                    child2 = viewGroup2.getChildAt(0);
+                    ((TextView) child2).setText(ru);
+                    clickListenerDel(
+                            ((ViewGroup) viewGroup2.getChildAt(1)).getChildAt(0),    //button minus
+
+                            //((ViewGroup)((ViewGroup)((ViewGroup) rowLinearLayout).getChildAt(0)).getChildAt(2)).getChildAt(0), //dutton del
+                            ((ViewGroup) ((ViewGroup) ((ViewGroup) ((ViewGroup) rowLinearLayout)
+                                    .getChildAt(0))
+                                    .getChildAt(0))
+                                    .getChildAt(1))
+                                    .getChildAt(0), //dutton del
+                            rowLinearLayout,
+                            _id);
+                    break;
+            }
+        }
+
+    }
+
+
+
 
     public void clickBtnAdd(View view) {
         ContentValues cv = new ContentValues();
@@ -257,9 +462,7 @@ public class RecordActivity extends ActionBarActivity {
                         editId = ID;
                         break;
                     case 1:
-                        // View _img = img;
-                        // img.setVisibility(View.INVISIBLE);
-                        //  dataBaseHelper.setInMind(ID, false);
+
                         break;
                     default:
                 }
@@ -353,10 +556,7 @@ public class RecordActivity extends ActionBarActivity {
                                 }
                             }
                         });
-                        // mainLayout.removeCh();
-                        //  del.setVisibility(View.INVISIBLE);
                     }
-
                     @Override
                     public void onAnimationRepeat(Animation animation) {
 

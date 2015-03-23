@@ -11,8 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +30,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String SHOW_RU = "show_ru";
     public static final String IN_MIND = "in_mind";
     public static final String IN_GAME = "in_game";
-
+    public static String maxCountRepeat = "10";
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE if not exists "
             + TABLE_NAME + " (" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -55,6 +53,84 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public ArrayList<Map> selectDataByWhere (String where){
+        ArrayList<Map> arrayList = new ArrayList<Map>();
+        String jquery;
+        if(where.isEmpty()){
+            jquery =  "SELECT * FROM "+TABLE_NAME;
+        }else{
+            jquery =  "SELECT * FROM "+TABLE_NAME+" WHERE " + where;
+        }
+
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        try {
+            cursor = sdb.rawQuery(jquery,null);
+        } catch (Exception e) {
+            Log.d("MyLog", "Error select where");
+        }
+        Map<String, String> map;
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(this.UID));
+            String valueEn = cursor.getString(cursor.getColumnIndex(this.VALUE_EN));
+            String valueRu = cursor.getString(cursor.getColumnIndex(this.VALUE_RU));
+            String show_ru = cursor.getString(cursor.getColumnIndex(this.SHOW_RU));
+            String in_mind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
+            String in_game = cursor.getString(cursor.getColumnIndex(this.IN_GAME));
+
+//            Log.d("LOG_TAG", "ROW " + id + " EN: " + valueEn + " RU: " + valueRu+" SHOW_RU: " +show_ru+ " IN_MIND: "+in_mind);
+
+            map = new HashMap<String, String>();
+            map.put("ID", id + "");
+            map.put("EN", valueEn);
+            map.put("RU", valueRu);
+            map.put("SHOW_RU", show_ru);
+            map.put("IN_MIND", in_mind);
+            map.put("IN_GAME", in_game);
+            arrayList.add(map);
+        }
+        sdb.close();
+
+        return  arrayList;
+    }
+
+
+
+    public ArrayList<Map> selectDataLike(String like){
+        ArrayList<Map> arrayList = new ArrayList<Map>();
+        String jquery =  "SELECT * FROM "+TABLE_NAME+" WHERE value_en LIKE '%"+like+"%'";
+        SQLiteDatabase sdb = this.getWritableDatabase();
+        Cursor cursor = sdb.rawQuery(jquery,null);
+        try {
+            cursor = sdb.rawQuery(jquery,null);
+        } catch (Exception e) {
+            Log.d("MyLog", "Error select like");
+        }
+        Map<String, String> map;
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(this.UID));
+            String valueEn = cursor.getString(cursor.getColumnIndex(this.VALUE_EN));
+            String valueRu = cursor.getString(cursor.getColumnIndex(this.VALUE_RU));
+            String show_ru = cursor.getString(cursor.getColumnIndex(this.SHOW_RU));
+            String in_mind = cursor.getString(cursor.getColumnIndex(this.IN_MIND));
+            String in_game = cursor.getString(cursor.getColumnIndex(this.IN_GAME));
+
+//            Log.d("LOG_TAG", "ROW " + id + " EN: " + valueEn + " RU: " + valueRu+" SHOW_RU: " +show_ru+ " IN_MIND: "+in_mind);
+
+            map = new HashMap<String, String>();
+            map.put("ID", id + "");
+            map.put("EN", valueEn);
+            map.put("RU", valueRu);
+            map.put("SHOW_RU", show_ru);
+            map.put("IN_MIND", in_mind);
+            map.put("IN_GAME", in_game);
+            arrayList.add(map);
+        }
+        sdb.close();
+
+        return  arrayList;
     }
 
 
