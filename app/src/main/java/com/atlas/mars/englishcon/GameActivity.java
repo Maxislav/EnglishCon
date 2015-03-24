@@ -1,4 +1,4 @@
-package com.example.mars.englishcon;
+package com.atlas.mars.englishcon;
 
 import android.content.Context;
 import android.content.Intent;

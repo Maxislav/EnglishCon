@@ -1,4 +1,4 @@
-package com.example.mars.englishcon;
+package com.atlas.mars.englishcon;
 
 /**
  * Created by mars on 3/13/15.
