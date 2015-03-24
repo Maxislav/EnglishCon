@@ -34,6 +34,12 @@ import java.util.Random;
  * Created by mars on 3/19/15.
  */
 public class GameActivity extends ActionBarActivity {
+
+    private  ArrayList<String> mixArrayList; //миксованый
+
+    private String findValue;
+
+
     private float dpHeight, dpWidth, density;
     DisplayMetrics displayMetrics;
     static final private int CHOOSE_THIEF = 0;
@@ -70,6 +76,9 @@ public class GameActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+
+
 
         fillTextVeiw = (TextView) findViewById(R.id.fillTextVeiw);
         findTextView = (TextView) findViewById(R.id.findTextView);
@@ -156,12 +165,23 @@ public class GameActivity extends ActionBarActivity {
 
     public void onInit() {
         if (value == null) {
-            mixValue = getRandom();
-            if(mixValue.isEmpty()){
+          //  mixValue = getRandom();
+            findValue = getRandom();
+            if(findValue.isEmpty()){
                 return;
             }
-            arrayValues = mixValue.split("");
-            elementsLength = arrayValues.length;
+            mixArrayList = new ArrayList<>();
+
+            String arrayValues[] = findValue.split("");
+                   //arrayValues = findValue.split("");
+            for(int i = 0; i<arrayValues.length; i++){
+                if(!arrayValues[i].isEmpty()){
+                    mixArrayList.add(arrayValues[i]);
+                }
+            }
+
+            //elementsLength = arrayValues.length;
+            elementsLength = mixArrayList.size();
             arrayList = new ArrayList<Map>();
             generate();
             getCountInMind();
@@ -214,16 +234,14 @@ public class GameActivity extends ActionBarActivity {
     private void createColum(LinearLayout rowLinearLayout) {
         View latterView = inflater.inflate(R.layout.letter_layout, rowLinearLayout, false);
         rowLinearLayout.addView(latterView);
-
-
         TextView t = (TextView) ((ViewGroup) latterView).getChildAt(0);
-        //Log.d(LOG, "before: "+t.getWidth()+"");
-        nElements++;
-        if (nElements < arrayValues.length) {
-            t.setText(arrayValues[nElements] + "");
-            clickListener(latterView, "0", arrayValues[nElements]);
+        if (nElements < mixArrayList.size()+1) {
+            t.setText(mixArrayList.get(nElements) + "");
+            clickListener(latterView, "0", mixArrayList.get(nElements));
+            nElements++;
+            getWidth(latterView, 1);
         }
-        getWidth(latterView, 1);
+
     }
 
 
@@ -234,21 +252,20 @@ public class GameActivity extends ActionBarActivity {
             @Override
             public void run() {
                 v.getWidth(); //height is ready
-
-                // Log.d(LOG, "Width: " + v.getWidth() + "");
-                // sum =((float)v.getWidth());
                 switch (c) {
                     case 0:
                         setMainLayoutWidth(v.getWidth());
                         createColum(rowLinearLayout);
                         break;
-                    default:
-                        summWidth += v.getHeight();
-                        if (summWidth < mainLayoutWidth && nElements < arrayValues.length - 1) {
+                    case 1:
+                        summWidth += v.getWidth()+5;
+                        if (summWidth < mainLayoutWidth && nElements < mixArrayList.size()) {
                             createColum(rowLinearLayout);
-                        } else if (nElements < arrayValues.length - 1) {
+                        } else if (nElements < mixArrayList.size()) {
                             createRow();
                         }
+                        break;
+                    default:
                 }
             }
         });
@@ -266,8 +283,7 @@ public class GameActivity extends ActionBarActivity {
                 fillTextVeiw.setText(fillTex);
                 map.put(letter, v);
                 arrayList.add(map);
-                // Log.d(LOG, "size:: "+arrayList.size() + ":" + (arrayValues.length-1));
-                if (arrayList.size() == arrayValues.length - 1) {
+                if (arrayList.size() == mixArrayList.size()) {
                     checkNext();
                 }
                 final View _v = v;
