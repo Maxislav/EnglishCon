@@ -38,7 +38,7 @@ public class RecordActivity extends ActionBarActivity {
     private static String editId;
     private  ArrayList<Map> arrayList;
     private RelativeLayout relativeLayout;
-    public final static String THIEF = "com.example.mars.englishcon.THIEF";
+    public final static String THIEF = "com.atlas.mars.englishcon.THIEF";
     DataBaseHelper dataBaseHelper;
     RelativeLayout animationContainer;
     LinearLayout textContainer, searchContainer;
