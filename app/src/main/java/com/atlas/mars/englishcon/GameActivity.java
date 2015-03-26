@@ -38,6 +38,7 @@ public class GameActivity extends ActionBarActivity {
     private  ArrayList<String> mixArrayList; //миксованый
 
     private String findValue;
+    //private String wi
 
 
     private float dpHeight, dpWidth, density;
@@ -48,6 +49,7 @@ public class GameActivity extends ActionBarActivity {
     private int nElements;
     private int elementsLength;
     private float summWidth;
+    private float aroundWidth;
     private float mainLayoutWidth;
     private TextView fillTextVeiw;
     private String fillTex;
@@ -76,7 +78,7 @@ public class GameActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
+        aroundWidth = 0;
 
 
 
@@ -257,8 +259,10 @@ public class GameActivity extends ActionBarActivity {
                         createColum(rowLinearLayout);
                         break;
                     case 1:
-                        summWidth += v.getWidth()+5;
-                        if (summWidth < mainLayoutWidth && nElements < mixArrayList.size()) {
+                        summWidth += v.getWidth();
+                        aroundWidth = v.getWidth();
+                        Log.d(LOG, "summWidth"+ summWidth);
+                        if (summWidth+aroundWidth < mainLayoutWidth - (density*20) && nElements < mixArrayList.size()) {
                             createColum(rowLinearLayout);
                         } else if (nElements < mixArrayList.size()) {
                             createRow();
@@ -387,7 +391,7 @@ public class GameActivity extends ActionBarActivity {
         thread = new Thread() {
             public void run() {
                 try {
-                    int n =  dataBaseHelper.countRow(dataBaseHelper.IN_MIND+" = 1 ");
+                    int n =  dataBaseHelper.countRow(dataBaseHelper.IN_MIND+" = 1 AND "+dataBaseHelper.IN_GAME+"<10" );
                     Message msg = Message.obtain(h, MyHundler.ID_1);
                     msg.obj = n+"";
                     h.sendMessage(msg);
@@ -442,6 +446,9 @@ public class GameActivity extends ActionBarActivity {
                         Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP, 0, 0);
                 toast.show();
+                getCountInMind();
+                getCountReady();
+               // regenParam();
             }
         }
     }

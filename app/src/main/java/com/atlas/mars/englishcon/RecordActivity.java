@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ public class RecordActivity extends ActionBarActivity {
     RelativeLayout animationContainer;
     LinearLayout textContainer, searchContainer;
     Button btnEdit;
+    String searchText;
 
 
 
@@ -106,10 +108,13 @@ public class RecordActivity extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_learn) {
-            Intent answerInent = new Intent();
+          /*  Intent answerInent = new Intent();
             answerInent.putExtra(THIEF, "Сраный пёсик");
             setResult(RESULT_OK, answerInent);
-            finish();
+            finish();*/
+           // new Intent(this, GameActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -134,8 +139,9 @@ public class RecordActivity extends ActionBarActivity {
         }
 
         if (id == android.R.id.home) {
-            Log.d("MyLog", "Home");
-            finish();
+           // Log.d("MyLog", "Home");
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -171,12 +177,6 @@ public class RecordActivity extends ActionBarActivity {
         mainLayout.removeAllViews();
         createItems();
     }
-
-
-
-
-
-
 
     public void clickCancelAdd(View v){
         resetParam();
@@ -285,27 +285,31 @@ public class RecordActivity extends ActionBarActivity {
     private void _init() {
         getListData();
         Log.d(LOG,"init");
-        relativeLayout.setOnClickListener(new  View.OnClickListener(){
+      /*  relativeLayout.setOnClickListener(new  View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Log.d(LOG,"global click");
             }
-        } );
+        } );*/
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(LOG, "onQueryTextSubmit: " + query);
                 searchView.clearFocus();
+                //searchView.onActionViewCollapsed();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                searchText = newText;
                 Log.d(LOG, "onQueryTextChange: " + newText);
                 getListDataLike(newText);
-
+                /*if(newText.isEmpty()){
+                    searchView.onActionViewCollapsed();
+                    searchView.setQuery("", false);
+                }*/
                 return false;
             }
         });
@@ -325,7 +329,49 @@ public class RecordActivity extends ActionBarActivity {
                 return false;
             }
         });
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "searchView onClick "+ searchView.isFocused());
+                searchView.onActionViewExpanded();
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if(!queryTextFocused && searchText.isEmpty()) {
+                    searchView.onActionViewCollapsed();
+                    searchView.setQuery("", false);
+                }
+            }
+        });
+
+       /* searchView.onActionViewCollapsed();*/
+      //  searchView.setFocusableInTouchMode(true);
+        //searchView.setFocusable(true);
+
+
     }
+    @Override
+    public void onBackPressed() {
+       Log.d(LOG,"back bress");
+       /* searchView.clearFocus();
+
+        getListData();*/
+        //relativeLayout.requestFocus();
+        if(searchView.isFocused()){
+            Log.d(LOG, "searchView back btn "+ searchView.isFocused());
+            searchView.onActionViewExpanded();
+            relativeLayout.requestFocus();
+            searchView.onActionViewCollapsed();
+        }else{
+            super.onBackPressed();
+        }
+
+    }
+
+
     private void createItems(){
         if (this.arrayList != null) {
             for (Map map : this.arrayList) {
