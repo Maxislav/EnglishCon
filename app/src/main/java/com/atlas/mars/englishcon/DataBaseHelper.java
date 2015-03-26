@@ -22,7 +22,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     SQLiteDatabase myBase;
     private static final String DATABASE_NAME = "en.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String TABLE_NAME = "dictionary";
     public static final String UID = "_id";
     public static final String VALUE_EN = "value_en";
@@ -48,6 +48,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ENTRIES);
         fill(db, "hello", "привет");
         fill(db, "world", "мир");
+        fill(db, "squint", "косоглазие, щуриться");
+        fill(db, "enterprise", "предприятие");
+        fill(db, "investigator", "следователь, исследователь");
+        fill(db, "resident", "резидент, постоянный житель");
+        fill(db, "arriving", "прибывающий");
+        fill(db, "behavior", "поведение");
+        fill(db, "bring", "приносить");
+        fill(db, "attempt", "попытка");
+        fill(db, "considering", "учитывая");
     }
 
     public void fill(SQLiteDatabase db, String valueEn, String valueRu){
@@ -62,7 +71,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        fill(db, "squint", "косоглазие, щуриться");
+        fill(db, "enterprise", "предприятие");
+        fill(db, "investigator", "следователь, исследователь");
+        fill(db, "resident", "резидент, постоянный житель");
+        fill(db, "arriving", "прибывающий");
+        fill(db, "behavior", "поведение");
+        fill(db, "bring", "приносить");
+        fill(db, "attempt", "попытка");
+        fill(db, "considering", "учитывая");
     }
 
     public ArrayList<Map> selectDataByWhere (String where){

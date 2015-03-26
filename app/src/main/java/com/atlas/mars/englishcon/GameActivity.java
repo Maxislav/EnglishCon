@@ -372,8 +372,6 @@ public class GameActivity extends ActionBarActivity {
                 default:
 
             }
-
-
         }
     }
     public void clickTip(View view){
@@ -383,7 +381,6 @@ public class GameActivity extends ActionBarActivity {
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
-
     private void getCountInMind(){
        final Handler h = new MyHundler();
         Thread thread;
