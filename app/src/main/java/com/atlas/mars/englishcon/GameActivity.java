@@ -146,18 +146,17 @@ public class GameActivity extends ActionBarActivity {
         if (id == R.id.action_game) {
 
             return true;
-           /* Intent questionIntent = new Intent(this, GameActivity.class);
-            startActivityForResult(questionIntent, CHOOSE_THIEF);*/
+
         }
 
         if (id == android.R.id.home) {
-            Log.d("MyLog", "Home");
-            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);;
             return true;
         }
 
-        Log.d("MyLog", "Home");
-        finish();
+       // Log.d("MyLog", "Home");
+        //finish();
 
         return super.onOptionsItemSelected(item);
     }
@@ -325,14 +324,14 @@ public class GameActivity extends ActionBarActivity {
             Log.d(LOG, "Key: " + key.toString() + "   ");
         }
         map.get(k).setVisibility(View.VISIBLE);
-        String[] fillTex = this.fillTex.split("");
-
-        String newFillText = "";
-        for (int i = 1; i < fillTex.length - 1; i++) {
-            newFillText += fillTex[i];
-        }
+        String newFillText;
+        newFillText = this.fillTex.substring(0,this.fillTex.length()-1);
         this.fillTex = newFillText;
-        fillTextVeiw.setText(this.fillTex);
+        if(fillTex.isEmpty()){
+            fillTextVeiw.setText(" ");
+        }else{
+            fillTextVeiw.setText(fillTex);
+        }
     }
 
     public void clickRegen(View v) {

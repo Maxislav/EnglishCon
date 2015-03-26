@@ -1,14 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
+    /*signingConfigs {
+        debug {
+            storeFile file('/home/mars/tmp/key.jks')
+            keyPassword 'gliderman2'
+            storePassword 'gliderman2'
+            keyAlias 'AppsForEnglish'
+        }
         config {
             keyAlias 'AppsForEnglish'
-            keyPassword 'пдшвукьфт2'
-            storeFile file('/home/mars/AndroidStudioProjects/KeyStore/my_key_store.jks')
-            storePassword 'пдшвукьфт2'
+            keyPassword 'gliderman2'
+            storeFile file('/home/mars/AndroidStudioProjects/Englishcon/key.jks')
+            storePassword 'gliderman2'
         }
-    }
+    }*/
     compileSdkVersion 22
     buildToolsVersion "21.1.2"
     defaultConfig {
@@ -23,9 +29,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
-            signingConfig signingConfigs.config
-        }
+      /*  debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+        }*/
     }
 }
 
