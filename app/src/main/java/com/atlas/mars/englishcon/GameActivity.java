@@ -104,7 +104,7 @@ public class GameActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        overridePendingTransition(R.anim.translate_show, R.anim.translate_left_hide);
+       // overridePendingTransition(R.anim.translate_show, R.anim.translate_left_hide);
         Log.d(LOG, "Density: " + density + " Width dp: " + dpWidth + " Width Pixels: " + displayMetrics.widthPixels);
     }
 

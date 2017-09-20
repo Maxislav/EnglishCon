@@ -72,7 +72,7 @@ public class RecordActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        overridePendingTransition(R.anim.translate_show, R.anim.translate_left_hide);
+        //overridePendingTransition(R.anim.translate_show, R.anim.translate_left_hide);
     }
 
     @Override

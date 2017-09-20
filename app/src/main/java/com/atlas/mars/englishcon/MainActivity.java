@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
         updateView();
-        overridePendingTransition( R.anim.translate_left_show, R.anim.translate );
+        //overridePendingTransition( R.anim.translate_left_show, R.anim.translate );
     }
 
 
